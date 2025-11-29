@@ -12,7 +12,13 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Gov Scout',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: const Color(0xFF4169E1),
+          // seedColor: const Color(0xFF1A237E),
+          // seedColor: const Color(0xFF00BCD4),
+          brightness: Brightness.dark,
+          // brightness: Brightness.light,
+        ),
         useMaterial3: true,
       ),
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
