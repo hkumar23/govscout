@@ -1,0 +1,1 @@
+{"flutter":{"platforms":{"android":{"default":{"projectId":"gov-scout","appId":"1:946961624710:android:d47e3558d545b7020c2b07","fileOutput":"android/app/google-services.json"}},"dart":{"lib/firebase_options.dart":{"projectId":"gov-scout","configurations":{"android":"1:946961624710:android:d47e3558d545b7020c2b07","ios":"1:946961624710:ios:93a8c2876576fb8c0c2b07"}}}}}}
