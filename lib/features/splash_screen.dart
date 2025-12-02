@@ -30,11 +30,10 @@ class _SplashScreenState extends State<SplashScreen> {
     return Scaffold(
       body: BlocListener<AuthBloc, AuthState>(
         listener: (context, state) {
-          if (state is SignInWithGoogleSuccessState ||
-              state is SignUpWithEmailSuccessState) {
+          if (state is SignUpWithEmailSuccessState) {
             context.go(AppRoutes.candidate);
           }
-          if (state is SignInWithEmailSuccessState) {
+          if (state is LoggedInState) {
             if (state.role == AppConstants.admin) {
               context.go(AppRoutes.admin);
             } else if (state.role == AppConstants.candidate) {

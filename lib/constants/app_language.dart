@@ -5,6 +5,7 @@ abstract class AppLanguage {
   static const savedJobs = 'Saved Jobs';
   static const email = 'Email';
   static const password = 'Password';
+  static const confirmPassword = 'Confirm Password';
   static const signIn = 'Sign In';
   static const signUp = 'Sign Up';
   static const forgotPassword = 'Forgot Password?';

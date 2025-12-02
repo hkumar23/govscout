@@ -23,8 +23,8 @@ class _CandidateViewState extends State<CandidateView> {
   ];
 
   final icons = [
-    Icons.work_outline,
-    Icons.bookmark_border,
+    Icons.work_rounded,
+    Icons.bookmark_rounded,
     Icons.settings,
   ];
 
@@ -60,20 +60,20 @@ class _CandidateViewState extends State<CandidateView> {
   @override
   Widget build(BuildContext context) {
     final bottomInset = MediaQuery.of(context).padding.bottom;
-    return Scaffold(
-        appBar: _buildCustomAppBar(_currentIndex),
-        body: Padding(
-          padding: EdgeInsets.only(bottom: bottomInset),
-          child: IndexedStack(
+    return Padding(
+      padding: EdgeInsets.only(bottom: bottomInset),
+      child: Scaffold(
+          appBar: _buildCustomAppBar(_currentIndex),
+          body: IndexedStack(
             index: _currentIndex,
             children: _screens,
           ),
-        ),
-        bottomNavigationBar: CustomBottomNavBar(
-          selectedIndex: _currentIndex,
-          onTapped: (index) => setState(() => _currentIndex = index),
-          icons: icons,
-          labels: labels,
-        ));
+          bottomNavigationBar: CustomBottomNavBar(
+            selectedIndex: _currentIndex,
+            onTapped: (index) => setState(() => _currentIndex = index),
+            icons: icons,
+            labels: labels,
+          )),
+    );
   }
 }

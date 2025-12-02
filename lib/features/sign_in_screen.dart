@@ -25,16 +25,26 @@ class SignInScreen extends StatefulWidget {
 class _SignInScreenState extends State<SignInScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
   final _resetEmailController = TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
   final _resetFormKey = GlobalKey<FormState>();
 
+  bool isSignInMode = true;
+
   Future<void> _onSubmit() async {
     if (!_formKey.currentState!.validate()) return;
     _formKey.currentState!.save();
 
-    BlocProvider.of<AuthBloc>(context).add(SignInWithEmailEvent(
+    if (isSignInMode) {
+      BlocProvider.of<AuthBloc>(context).add(SignInWithEmailEvent(
+        email: _emailController.text.trim(),
+        password: _passwordController.text.trim(),
+      ));
+      return;
+    }
+    BlocProvider.of<AuthBloc>(context).add(SignUpWithEmailEvent(
       email: _emailController.text.trim(),
       password: _passwordController.text.trim(),
     ));
@@ -60,8 +70,7 @@ class _SignInScreenState extends State<SignInScreen> {
           );
         }
 
-        if (state is SignInWithGoogleSuccessState ||
-            state is SignUpWithEmailSuccessState) {
+        if (state is SignUpWithEmailSuccessState) {
           context.go(AppRoutes.candidate);
           CustomSnackbar.success(
             context: context,
@@ -69,7 +78,7 @@ class _SignInScreenState extends State<SignInScreen> {
           );
         }
 
-        if (state is SignInWithEmailSuccessState) {
+        if (state is LoggedInState) {
           if (state.role == AppConstants.admin) {
             context.go(AppRoutes.admin);
             CustomSnackbar.success(
@@ -142,7 +151,9 @@ class _SignInScreenState extends State<SignInScreen> {
                                 ),
                                 SizedBox(height: 3),
                                 Text(
-                                  "Sign in to continue",
+                                  isSignInMode
+                                      ? "Sign in to continue"
+                                      : "Sign up to continue",
                                   style: theme.textTheme.bodyLarge!.copyWith(
                                     fontWeight: FontWeight.w500,
                                     fontFamily: GoogleFonts.inter().fontFamily,
@@ -165,89 +176,108 @@ class _SignInScreenState extends State<SignInScreen> {
                                   validator: AppValidators.passwordRequired,
                                   isPassword: true,
                                 ),
-                                InkWell(
-                                  onTap: () {
-                                    showDialog(
-                                      context: context,
-                                      builder: (context) => AlertDialog(
-                                        backgroundColor: theme
-                                            .colorScheme.secondaryContainer,
-                                        title: Text("Reset Password"),
-                                        content: Form(
-                                          key: _resetFormKey,
-                                          child: AppTextFormField(
-                                            controller: _resetEmailController,
-                                            hintText: "Enter Registered Email",
-                                            validator:
-                                                AppValidators.emailRequired,
-                                          ),
-                                        ),
-                                        actions: [
-                                          FilledButton(
-                                            style: FilledButton.styleFrom(
-                                              backgroundColor:
-                                                  Colors.white.withAlpha(200),
-                                              foregroundColor: Colors.black,
-                                              textStyle: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                              ),
+                                if (!isSignInMode) SizedBox(height: 10),
+                                if (!isSignInMode)
+                                  AuthFormField(
+                                    hintText: AppLanguage.confirmPassword,
+                                    icon: Icons.password,
+                                    controller: _confirmPasswordController,
+                                    validator: (value) {
+                                      if (_confirmPasswordController.text
+                                              .trim() !=
+                                          _passwordController.text.trim()) {
+                                        return "Passwords do not match";
+                                      }
+                                      return null;
+                                    },
+                                    isPassword: true,
+                                  ),
+                                if (isSignInMode)
+                                  InkWell(
+                                    onTap: () {
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) => AlertDialog(
+                                          backgroundColor: theme
+                                              .colorScheme.secondaryContainer,
+                                          title: Text("Reset Password"),
+                                          content: Form(
+                                            key: _resetFormKey,
+                                            child: AppTextFormField(
+                                              controller: _resetEmailController,
+                                              hintText:
+                                                  "Enter Registered Email",
+                                              validator:
+                                                  AppValidators.emailRequired,
                                             ),
-                                            child: Text(AppLanguage.cancel),
-                                            onPressed: () {
-                                              Navigator.of(context).pop();
-                                            },
                                           ),
-                                          FilledButton(
-                                            style: FilledButton.styleFrom(
-                                              backgroundColor:
-                                                  Colors.white.withAlpha(200),
-                                              foregroundColor: Colors.black,
-                                              textStyle: TextStyle(
-                                                fontWeight: FontWeight.bold,
+                                          actions: [
+                                            FilledButton(
+                                              style: FilledButton.styleFrom(
+                                                backgroundColor:
+                                                    Colors.white.withAlpha(200),
+                                                foregroundColor: Colors.black,
+                                                textStyle: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                ),
                                               ),
-                                            ),
-                                            onPressed: () {
-                                              if (_resetFormKey.currentState
-                                                      ?.validate() ??
-                                                  false) {
-                                                _resetFormKey.currentState!
-                                                    .save();
-
-                                                BlocProvider.of<AuthBloc>(
-                                                        context)
-                                                    .add(ResetPasswordEvent(
-                                                  _resetEmailController.text
-                                                      .trim(),
-                                                ));
+                                              child: Text(AppLanguage.cancel),
+                                              onPressed: () {
                                                 Navigator.of(context).pop();
-                                              }
-                                            },
-                                            child: Text(AppLanguage.submit),
-                                          )
+                                              },
+                                            ),
+                                            FilledButton(
+                                              style: FilledButton.styleFrom(
+                                                backgroundColor:
+                                                    Colors.white.withAlpha(200),
+                                                foregroundColor: Colors.black,
+                                                textStyle: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                              onPressed: () {
+                                                if (_resetFormKey.currentState
+                                                        ?.validate() ??
+                                                    false) {
+                                                  _resetFormKey.currentState!
+                                                      .save();
+
+                                                  BlocProvider.of<AuthBloc>(
+                                                          context)
+                                                      .add(ResetPasswordEvent(
+                                                    _resetEmailController.text
+                                                        .trim(),
+                                                  ));
+                                                  Navigator.of(context).pop();
+                                                }
+                                              },
+                                              child: Text(AppLanguage.submit),
+                                            )
+                                          ],
+                                        ),
+                                      );
+                                    },
+                                    child: Padding(
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: 5,
+                                        vertical: 8,
+                                      ),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.max,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.end,
+                                        children: [
+                                          Text(
+                                            "Forgot Password?",
+                                            style: theme.textTheme.labelLarge!
+                                                .copyWith(
+                                              color: theme.colorScheme.primary,
+                                            ),
+                                          ),
                                         ],
                                       ),
-                                    );
-                                  },
-                                  child: Padding(
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: 5,
-                                      vertical: 8,
-                                    ),
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.max,
-                                      mainAxisAlignment: MainAxisAlignment.end,
-                                      children: [
-                                        Text(
-                                          "Forgot Password?",
-                                          style: theme.textTheme.labelLarge!
-                                              .copyWith(
-                                            color: theme.colorScheme.primary,
-                                          ),
-                                        ),
-                                      ],
                                     ),
                                   ),
-                                ),
                                 SizedBox(height: 40),
                                 // Login Button
                                 Row(
@@ -277,7 +307,9 @@ class _SignInScreenState extends State<SignInScreen> {
                                                 ? null
                                                 : _onSubmit,
                                             child: Text(
-                                              'Login',
+                                              isSignInMode
+                                                  ? AppLanguage.signIn
+                                                  : AppLanguage.signUp,
                                               style: theme.textTheme.titleLarge!
                                                   .copyWith(
                                                 fontWeight: FontWeight.bold,
@@ -292,21 +324,29 @@ class _SignInScreenState extends State<SignInScreen> {
                                   child: RichText(
                                     textAlign: TextAlign.center,
                                     text: TextSpan(
-                                      text: "Don't have an account? ",
+                                      text: isSignInMode
+                                          ? "Don't have an account? "
+                                          : "Already have an account? ",
                                       style:
                                           theme.textTheme.bodyMedium!.copyWith(
                                         color: Colors.white.withAlpha(200),
                                       ),
                                       children: [
                                         TextSpan(
-                                          text: "Sign Up",
+                                          text: isSignInMode
+                                              ? "Sign Up"
+                                              : "Sign In",
                                           style: theme.textTheme.bodyMedium!
                                               .copyWith(
                                             color: theme.colorScheme.primary,
                                             fontWeight: FontWeight.bold,
                                           ),
                                           recognizer: TapGestureRecognizer()
-                                            ..onTap = () {},
+                                            ..onTap = () {
+                                              setState(() {
+                                                isSignInMode = !isSignInMode;
+                                              });
+                                            },
                                         ),
                                       ],
                                     ),
