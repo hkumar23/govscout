@@ -7,6 +7,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../constants/app_constants.dart';
 import '../constants/app_language.dart';
 import '../constants/app_routes.dart';
+import '../constants/assets.dart';
 import '../logic/blocs/auth/auth_bloc.dart';
 import '../logic/blocs/auth/auth_event.dart';
 import '../logic/blocs/auth/auth_state.dart';
@@ -23,6 +24,7 @@ class SignInScreen extends StatefulWidget {
 }
 
 class _SignInScreenState extends State<SignInScreen> {
+  final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
@@ -45,6 +47,7 @@ class _SignInScreenState extends State<SignInScreen> {
       return;
     }
     BlocProvider.of<AuthBloc>(context).add(SignUpWithEmailEvent(
+      name: _nameController.text.trim(),
       email: _emailController.text.trim(),
       password: _passwordController.text.trim(),
     ));
@@ -118,13 +121,19 @@ class _SignInScreenState extends State<SignInScreen> {
                       children: [
                         SizedBox(height: 70),
                         Container(
-                          height: 250,
+                          height: 200,
                           padding: EdgeInsets.symmetric(
-                              vertical: 24, horizontal: 24),
+                            vertical: 24,
+                            horizontal: 24,
+                          ),
                           width: double.infinity,
                           child: ClipRRect(
-                            child: Image.network(
-                              "https://cdn-icons-png.flaticon.com/512/6715/6715844.png",
+                            // child: Image.network(
+                            //   "https://cdn-icons-png.flaticon.com/512/6715/6715844.png",
+                            //   fit: BoxFit.contain,
+                            // ),
+                            child: Image.asset(
+                              Assets.logoTransparent,
                               fit: BoxFit.contain,
                             ),
                           ),
@@ -162,6 +171,14 @@ class _SignInScreenState extends State<SignInScreen> {
                                   textAlign: TextAlign.start,
                                 ),
                                 SizedBox(height: 15),
+                                if (!isSignInMode)
+                                  AuthFormField(
+                                    hintText: AppLanguage.fullName,
+                                    icon: Icons.person_outline,
+                                    controller: _nameController,
+                                    validator: AppValidators.textRequired,
+                                  ),
+                                if (!isSignInMode) SizedBox(height: 10),
                                 AuthFormField(
                                   hintText: AppLanguage.email,
                                   icon: Icons.email_outlined,
@@ -278,7 +295,7 @@ class _SignInScreenState extends State<SignInScreen> {
                                       ),
                                     ),
                                   ),
-                                SizedBox(height: 40),
+                                SizedBox(height: 20),
                                 // Login Button
                                 Row(
                                   mainAxisSize: MainAxisSize.max,

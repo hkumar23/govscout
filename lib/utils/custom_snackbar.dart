@@ -68,7 +68,7 @@ abstract class CustomSnackbar {
           text,
           style: theme.textTheme.labelLarge!.copyWith(
             fontWeight: FontWeight.bold,
-            color: Colors.white,
+            color: Colors.black,
           ),
         ),
         backgroundColor: Theme.of(context).colorScheme.primary,

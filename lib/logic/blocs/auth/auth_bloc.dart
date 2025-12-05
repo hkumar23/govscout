@@ -2,8 +2,10 @@ import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../../../constants/app_constants.dart';
+import '../../../constants/firebase_collections.dart';
 import '../../../data/models/user.model.dart';
 import '../../../data/repositories/auth_repo.dart';
+import '../../../data/repositories/candidate_repo.dart';
 import '../../../data/repositories/user_repo.dart';
 import '../../../utils/app_exception.dart';
 import 'auth_event.dart';
@@ -12,6 +14,7 @@ import 'auth_state.dart';
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final _authRepo = AuthRepository();
   final _userRepo = UserRepository();
+  final _candidateRepo = CandidateRepository();
   final _firestore = FirebaseFirestore.instance;
 
   AuthBloc() : super(InitialAuthState()) {
@@ -45,7 +48,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         emit(LoggedInState(role: userDoc.role));
       } else {
         emit(UserNotAuthendicatedState());
-        throw "User not Authenticated";
+        // throw "User not Authenticated";
       }
     } catch (e) {
       emit(
@@ -110,23 +113,27 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       if (currentUser == null) {
         throw "User not found after sign up";
       }
-      final newUser = UserModel(
-        email: event.email,
-        role: AppConstants.candidate,
-        uid: currentUser.uid,
-        createdAt: DateTime.now(),
-        updatedAt: DateTime.now(),
-      );
-      await _userRepo.createUser(newUser);
 
-      final roleCollectionRef =
-          _firestore.collection(newUser.role).doc(newUser.uid);
-      await roleCollectionRef.set({
-        AppConstants.uid: newUser.uid,
-        AppConstants.email: newUser.email,
-        AppConstants.createdAt: Timestamp.fromDate(newUser.createdAt),
-        AppConstants.updatedAt: Timestamp.fromDate(newUser.updatedAt),
-      });
+      await _userRepo.createUser(
+        {
+          AppConstants.email: event.email,
+          AppConstants.name: event.name,
+          AppConstants.role: AppConstants.candidate,
+          AppConstants.createdAt: DateTime.now(),
+          AppConstants.updatedAt: DateTime.now(),
+        },
+        currentUser.uid,
+      );
+      await _candidateRepo.createCandidate(
+        {
+          AppConstants.email: event.email,
+          AppConstants.name: event.name,
+          AppConstants.createdAt: DateTime.now(),
+          AppConstants.updatedAt: DateTime.now(),
+        },
+        currentUser.uid,
+      );
+
       // AppMethods.updateFcmToken(newUser.uid, newUser.role);
       // if (!kIsWeb) {
       //   await NotificationsService()

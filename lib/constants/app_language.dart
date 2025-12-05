@@ -12,4 +12,6 @@ abstract class AppLanguage {
   static const resetPassword = 'Reset Password';
   static const cancel = 'Cancel';
   static const submit = 'Submit';
+  static const fullName = 'Full Name';
+  static const logout = 'Logout';
 }

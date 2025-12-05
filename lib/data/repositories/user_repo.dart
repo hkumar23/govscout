@@ -18,25 +18,24 @@ class UserRepository {
     }
   }
 
-  Future<void> createUser(UserModel user) async {
+  Future<void> createUser(Map<String, dynamic> userData, String uid) async {
     try {
       await _firestore
           .collection(FirebaseCollections.users)
-          .doc(user.uid)
-          .set(user.toJson());
+          .doc(uid)
+          .set(userData);
     } catch (e) {
       rethrow;
     }
   }
 
-  Future<void> updateUser(UserModel user) async {
+  Future<void> updateUser(Map<String, dynamic> userData, String uid) async {
     try {
-      Map<String, dynamic> userData = user.toJson();
       userData[AppConstants.updatedAt] = Timestamp.now();
       await _firestore
           .collection(FirebaseCollections.users)
-          .doc(user.uid)
-          .update(user.toJson());
+          .doc(uid)
+          .update(userData);
     } catch (e) {
       rethrow;
     }
