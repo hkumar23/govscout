@@ -2,7 +2,6 @@ import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../../../constants/app_constants.dart';
-import '../../../constants/firebase_collections.dart';
 import '../../../data/models/user.model.dart';
 import '../../../data/repositories/auth_repo.dart';
 import '../../../data/repositories/candidate_repo.dart';
@@ -45,7 +44,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           throw "${userDoc.role} not found in database";
         }
 
-        emit(LoggedInState(role: userDoc.role));
+        emit(LoggedInState(
+          role: userDoc.role,
+          userId: user.uid,
+        ));
       } else {
         emit(UserNotAuthendicatedState());
         // throw "User not Authenticated";
@@ -84,6 +86,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
       emit(LoggedInState(
         role: user.role,
+        userId: user.uid,
       ));
     } on AppException catch (e) {
       emit(
@@ -139,7 +142,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       //   await NotificationsService()
       //       .updateTokenForUser(AuthRepository().currentUser!.uid);
       // }
-      emit(SignUpWithEmailSuccessState());
+      emit(SignUpWithEmailSuccessState(userId: currentUser.uid));
     } on AppException catch (e) {
       emit(
         AuthErrorState(e),

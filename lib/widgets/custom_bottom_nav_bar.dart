@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../constants/app_colors.dart';
+
 class CustomBottomNavBar extends StatelessWidget {
   const CustomBottomNavBar({
     super.key,
@@ -19,14 +21,14 @@ class CustomBottomNavBar extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 8),
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.secondaryContainer,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withAlpha(50), // shadow color
-            spreadRadius: 1, // how wide the shadow spreads
-            blurRadius: 8, // how soft the shadow looks
-            offset: Offset(0, -2), // x: right/left, y: up/down
-          ),
-        ],
+        // boxShadow: [
+        //   BoxShadow(
+        //     color: Colors.black.withAlpha(50), // shadow color
+        //     spreadRadius: 1, // how wide the shadow spreads
+        //     blurRadius: 8, // how soft the shadow looks
+        //     offset: Offset(0, -2), // x: right/left, y: up/down
+        //   ),
+        // ],
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -39,6 +41,8 @@ class CustomBottomNavBar extends StatelessWidget {
 
   Widget buildNavItem(int index, BuildContext context) {
     bool isSelected = selectedIndex == index;
+    final theme = Theme.of(context);
+    final appColors = AppColors(context);
     // final deviceSize = MediaQuery.of(context).size;
     return GestureDetector(
       onTap: () => onTapped(index),
@@ -49,16 +53,16 @@ class CustomBottomNavBar extends StatelessWidget {
         margin: isSelected ? const EdgeInsets.symmetric(horizontal: 5) : null,
         decoration: BoxDecoration(
           shape: BoxShape.rectangle,
-          color: isSelected
-              ? Theme.of(context).colorScheme.primary
-              : Colors.transparent,
+          color: isSelected ? theme.colorScheme.primary : Colors.transparent,
           borderRadius: const BorderRadius.all(Radius.circular(30)),
         ),
         child: Row(
           children: [
             Icon(
               icons[index],
-              color: isSelected ? Colors.black : Colors.grey,
+              color: isSelected
+                  ? appColors.background
+                  : appColors.onBackground.withAlpha(125),
               // size: deviceSize.width* 0.08,
               // size: Theme.of(context).iconTheme.size,
             ),
@@ -67,7 +71,7 @@ class CustomBottomNavBar extends StatelessWidget {
               Text(
                 labels[index],
                 style: Theme.of(context).textTheme.labelLarge!.copyWith(
-                      color: Colors.black,
+                      color: appColors.background,
                       fontWeight: FontWeight.w600,
                     ),
               )

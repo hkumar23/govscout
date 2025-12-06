@@ -12,7 +12,7 @@ class UserRepository {
       final doc =
           await _firestore.collection(FirebaseCollections.users).doc(uid).get();
       if (!doc.exists) return null;
-      return UserModel.fromJson(doc.data()!);
+      return UserModel.fromJson(doc.data()!, doc.id);
     } catch (e) {
       rethrow;
     }

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../constants/app_colors.dart';
+
 /// Shows a simple, modern dialog with a clean UI and a smooth scale/fade animation.
 ///
 /// [context] is the BuildContext from which the dialog is shown.
@@ -85,6 +87,7 @@ class _SimpleModernDialogContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final appColors = AppColors(context);
 
     return Dialog(
       elevation: 0,
@@ -95,7 +98,8 @@ class _SimpleModernDialogContent extends StatelessWidget {
         ),
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.secondaryContainer,
+          // color: appColors.primaryContainer,
+          color: theme.colorScheme.secondaryContainer,
           borderRadius: BorderRadius.circular(20),
         ),
         child: Column(
@@ -113,7 +117,7 @@ class _SimpleModernDialogContent extends StatelessWidget {
                 title!,
                 style: theme.textTheme.headlineSmall?.copyWith(
                   fontWeight: FontWeight.bold,
-                  color: Colors.white,
+                  color: appColors.onBackground,
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -124,7 +128,7 @@ class _SimpleModernDialogContent extends StatelessWidget {
               Text(
                 content!,
                 style: theme.textTheme.bodyLarge!.copyWith(
-                  color: Colors.white70,
+                  color: appColors.onBackground.withAlpha(200),
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -137,17 +141,18 @@ class _SimpleModernDialogContent extends StatelessWidget {
                 FilledButton(
                   onPressed: () => onConfirm(context),
                   style: FilledButton.styleFrom(
-                    backgroundColor:
-                        confirmButtonColor ?? Colors.white.withAlpha(50),
-                    foregroundColor: Colors.white,
+                    backgroundColor: confirmButtonColor ??
+                        appColors.onSecondaryContainer.withAlpha(50),
+                    foregroundColor: appColors.onSecondaryContainer,
                   ),
                   child: Text(confirmText),
                 ),
                 const SizedBox(width: 16),
                 FilledButton(
                   style: FilledButton.styleFrom(
-                    backgroundColor: Colors.white.withAlpha(50),
-                    foregroundColor: Colors.white,
+                    backgroundColor:
+                        appColors.onSecondaryContainer.withAlpha(50),
+                    foregroundColor: appColors.onSecondaryContainer,
                   ),
                   onPressed: () {
                     if (onCancel == null) {

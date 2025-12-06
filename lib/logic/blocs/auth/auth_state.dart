@@ -6,8 +6,10 @@ class InitialAuthState extends AuthState {}
 
 class LoggedInState extends AuthState {
   final String role;
+  final String userId;
   LoggedInState({
     required this.role,
+    required this.userId,
   });
 }
 
@@ -25,7 +27,12 @@ class LoggedInState extends AuthState {
 //   });
 // }
 
-class SignUpWithEmailSuccessState extends AuthState {}
+class SignUpWithEmailSuccessState extends AuthState {
+  final String userId;
+  SignUpWithEmailSuccessState({
+    required this.userId,
+  });
+}
 
 class LoggedOutState extends AuthState {}
 

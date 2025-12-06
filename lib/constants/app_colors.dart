@@ -12,9 +12,8 @@ class AppColors {
       ? const Color(0xFF4CAF50)
       : const Color(0xFF66BB6A);
 
-  Color get error => Theme.of(context).brightness == Brightness.dark
-      ? const Color(0xFFF44336)
-      : const Color(0xFFE57373);
+  Color get error => const Color(0xFFF44336);
+  Color get onError => const Color(0xFFFFFFFF);
 
   Color get background => Theme.of(context).brightness == Brightness.dark
       ? const Color.fromARGB(255, 23, 23, 23)
@@ -22,6 +21,7 @@ class AppColors {
   Color get onBackground => Theme.of(context).brightness == Brightness.dark
       ? const Color(0xFFFFFFFF)
       : const Color(0xFF000000);
+
   Color get secondaryContainer =>
       Theme.of(context).brightness == Brightness.dark
           ? const Color(0xFF2C2C2C)
@@ -30,7 +30,4 @@ class AppColors {
       Theme.of(context).brightness == Brightness.dark
           ? const Color.fromARGB(255, 231, 231, 231)
           : const Color(0xFF2C2C2C);
-  Color get primaryContainer => Theme.of(context).brightness == Brightness.dark
-      ? Theme.of(context).colorScheme.secondaryContainer
-      : const Color.fromARGB(255, 184, 184, 184);
 }

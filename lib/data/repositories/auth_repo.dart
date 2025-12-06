@@ -49,7 +49,7 @@ class AuthRepository {
         await signOut();
         throw "User authenticated but not found in database!";
       }
-      final user = UserModel.fromJson(userData);
+      final user = UserModel.fromJson(userData, userCredential.user!.uid);
       final userRoleRef = _firestore.collection(user.role).doc(user.uid);
       final userRoleSnap = await userRoleRef.get();
       if (!userRoleSnap.exists) {

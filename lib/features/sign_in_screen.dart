@@ -9,6 +9,8 @@ import '../constants/app_constants.dart';
 import '../constants/app_language.dart';
 import '../constants/app_routes.dart';
 import '../constants/assets.dart';
+import '../core/theme/bloc/theme_bloc.dart';
+import '../core/theme/bloc/theme_event.dart';
 import '../logic/blocs/auth/auth_bloc.dart';
 import '../logic/blocs/auth/auth_event.dart';
 import '../logic/blocs/auth/auth_state.dart';
@@ -83,6 +85,7 @@ class _SignInScreenState extends State<SignInScreen> {
         }
 
         if (state is LoggedInState) {
+          BlocProvider.of<ThemeBloc>(context).add(LoadUserTheme(state.userId));
           if (state.role == AppConstants.admin) {
             context.go(AppRoutes.admin);
             CustomSnackbar.success(
@@ -99,6 +102,13 @@ class _SignInScreenState extends State<SignInScreen> {
             BlocProvider.of<AuthBloc>(context).add(LogoutEvent());
             context.go(AppRoutes.signIn);
           }
+        }
+
+        if (state is LoggedOutState) {
+          CustomSnackbar.neutral(
+            context: context,
+            text: "Logged Out Successfully",
+          );
         }
       },
       builder: (context, state) {
@@ -219,8 +229,8 @@ class _SignInScreenState extends State<SignInScreen> {
                                       showDialog(
                                         context: context,
                                         builder: (context) => AlertDialog(
-                                          backgroundColor:
-                                              appColors.primaryContainer,
+                                          backgroundColor: theme
+                                              .colorScheme.secondaryContainer,
                                           title: Text("Reset Password"),
                                           content: Form(
                                             key: _resetFormKey,

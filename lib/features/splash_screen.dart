@@ -4,6 +4,8 @@ import 'package:go_router/go_router.dart';
 
 import '../constants/app_constants.dart';
 import '../constants/app_routes.dart';
+import '../core/theme/bloc/theme_bloc.dart';
+import '../core/theme/bloc/theme_event.dart';
 import '../logic/blocs/auth/auth_bloc.dart';
 import '../logic/blocs/auth/auth_event.dart';
 import '../logic/blocs/auth/auth_state.dart';
@@ -34,6 +36,8 @@ class _SplashScreenState extends State<SplashScreen> {
             context.go(AppRoutes.candidate);
           }
           if (state is LoggedInState) {
+            // BlocProvider.of<ThemeBloc>(context)
+            //     .add(LoadUserTheme(state.userId));
             if (state.role == AppConstants.admin) {
               context.go(AppRoutes.admin);
             } else if (state.role == AppConstants.candidate) {

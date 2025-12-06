@@ -31,4 +31,6 @@ abstract class AppConstants {
   static const permissions = 'permissions';
   static const createdJobIds = 'createdJobIds';
   static const editedJobIds = 'editedJobIds';
+  static const theme = 'theme';
+  static const system = 'system';
 }

@@ -46,7 +46,7 @@ abstract class CustomSnackbar {
           text,
           style: theme.textTheme.labelLarge!.copyWith(
             fontWeight: FontWeight.bold,
-            color: Colors.white,
+            color: appColors.onError,
           ),
         ),
         backgroundColor: appColors.error,
@@ -70,7 +70,7 @@ abstract class CustomSnackbar {
           text,
           style: theme.textTheme.labelLarge!.copyWith(
             fontWeight: FontWeight.bold,
-            color: Colors.black,
+            color: Theme.of(context).colorScheme.onPrimary,
           ),
         ),
         backgroundColor: Theme.of(context).colorScheme.primary,

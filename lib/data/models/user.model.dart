@@ -20,17 +20,16 @@ class UserModel {
     return {
       AppConstants.email: email,
       AppConstants.role: role,
-      AppConstants.uid: uid,
       AppConstants.createdAt: Timestamp.fromDate(createdAt),
       AppConstants.updatedAt: Timestamp.fromDate(updatedAt),
     };
   }
 
-  factory UserModel.fromJson(Map<String, dynamic> json) {
+  factory UserModel.fromJson(Map<String, dynamic> json, String uid) {
     return UserModel(
       email: json[AppConstants.email],
+      uid: uid,
       role: json[AppConstants.role],
-      uid: json[AppConstants.uid],
       createdAt: (json[AppConstants.createdAt] as Timestamp).toDate(),
       updatedAt: (json[AppConstants.updatedAt] as Timestamp).toDate(),
     );
