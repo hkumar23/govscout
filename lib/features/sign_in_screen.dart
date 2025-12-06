@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../constants/app_colors.dart';
 import '../constants/app_constants.dart';
 import '../constants/app_language.dart';
 import '../constants/app_routes.dart';
@@ -101,9 +102,11 @@ class _SignInScreenState extends State<SignInScreen> {
         }
       },
       builder: (context, state) {
+        final AppColors appColors = AppColors(context);
+
         return Scaffold(
           resizeToAvoidBottomInset: false,
-          backgroundColor: Colors.black,
+          backgroundColor: appColors.background,
           body: state is AuthLoadingState
               ? Center(
                   child: CircularProgressIndicator(
@@ -154,7 +157,8 @@ class _SignInScreenState extends State<SignInScreen> {
                                   "Welcome",
                                   style: theme.textTheme.displaySmall!.copyWith(
                                     fontFamily: GoogleFonts.oswald().fontFamily,
-                                    color: Colors.white,
+                                    color: appColors.onBackground,
+                                    fontWeight: FontWeight.bold,
                                   ),
                                   textAlign: TextAlign.start,
                                 ),
@@ -164,9 +168,9 @@ class _SignInScreenState extends State<SignInScreen> {
                                       ? "Sign in to continue"
                                       : "Sign up to continue",
                                   style: theme.textTheme.bodyLarge!.copyWith(
-                                    fontWeight: FontWeight.w500,
+                                    fontWeight: FontWeight.bold,
                                     fontFamily: GoogleFonts.inter().fontFamily,
-                                    color: Colors.white,
+                                    color: appColors.onBackground,
                                   ),
                                   textAlign: TextAlign.start,
                                 ),
@@ -215,8 +219,8 @@ class _SignInScreenState extends State<SignInScreen> {
                                       showDialog(
                                         context: context,
                                         builder: (context) => AlertDialog(
-                                          backgroundColor: theme
-                                              .colorScheme.secondaryContainer,
+                                          backgroundColor:
+                                              appColors.primaryContainer,
                                           title: Text("Reset Password"),
                                           content: Form(
                                             key: _resetFormKey,
@@ -304,13 +308,15 @@ class _SignInScreenState extends State<SignInScreen> {
                                     state is AuthLoadingState
                                         ? Center(
                                             child: CircularProgressIndicator(
-                                              color: Colors.white,
+                                              color: appColors.onBackground,
                                             ),
                                           )
                                         : ElevatedButton(
                                             style: ElevatedButton.styleFrom(
                                               backgroundColor:
                                                   theme.colorScheme.primary,
+                                              // foregroundColor:
+                                              //     appColors.background,
                                               shape: RoundedRectangleBorder(
                                                 borderRadius:
                                                     BorderRadius.circular(15),
@@ -330,7 +336,8 @@ class _SignInScreenState extends State<SignInScreen> {
                                               style: theme.textTheme.titleLarge!
                                                   .copyWith(
                                                 fontWeight: FontWeight.bold,
-                                                color: Colors.black,
+                                                color:
+                                                    theme.colorScheme.onPrimary,
                                               ),
                                             ),
                                           ),
@@ -346,7 +353,8 @@ class _SignInScreenState extends State<SignInScreen> {
                                           : "Already have an account? ",
                                       style:
                                           theme.textTheme.bodyMedium!.copyWith(
-                                        color: Colors.white.withAlpha(200),
+                                        color: appColors.onBackground
+                                            .withAlpha(200),
                                       ),
                                       children: [
                                         TextSpan(

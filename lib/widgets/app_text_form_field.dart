@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../constants/app_colors.dart';
+
 class AppTextFormField extends StatefulWidget {
   final TextEditingController? controller;
   final String? Function(String?)? validator;
@@ -48,13 +50,15 @@ class _AppTextFormFieldState extends State<AppTextFormField> {
   bool isObscured = true;
   @override
   Widget build(BuildContext context) {
+    final appColors = AppColors(context);
+
     return Padding(
       padding: EdgeInsets.only(bottom: widget.bottomPadding),
       child: TextFormField(
         controller: widget.controller,
         decoration: InputDecoration(
           filled: true,
-          fillColor: Colors.white.withAlpha(50),
+          fillColor: appColors.secondaryContainer.withAlpha(150),
           contentPadding:
               const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
           hintText: widget.hintText,

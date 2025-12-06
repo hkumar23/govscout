@@ -16,6 +16,8 @@ class SettingsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final AppColors appColors = AppColors(context);
+
     return Scaffold(
       body: BlocConsumer<AuthBloc, AuthState>(
         listener: (context, state) {
@@ -38,11 +40,11 @@ class SettingsScreen extends StatelessWidget {
               ListTile(
                 leading: Icon(
                   Icons.logout,
-                  color: AppColors.error,
+                  color: appColors.error,
                 ),
                 title: Text(
                   AppLanguage.logout,
-                  style: TextStyle(color: AppColors.error),
+                  style: TextStyle(color: appColors.error),
                 ),
                 onTap: () {
                   AppMethods.logoutWithDialog(context);

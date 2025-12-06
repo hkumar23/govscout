@@ -28,6 +28,7 @@ class _AuthFormFieldState extends State<AuthFormField> {
   Widget build(BuildContext context) {
     // Using a theme to easily access colors and text styles
     final theme = Theme.of(context);
+    final AppColors appColors = AppColors(context);
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 5),
@@ -35,7 +36,9 @@ class _AuthFormFieldState extends State<AuthFormField> {
         controller: widget.controller,
         obscureText: widget.isPassword ? isObscured : false,
         validator: widget.validator,
-        style: theme.textTheme.bodyLarge,
+        style: theme.textTheme.bodyLarge!.copyWith(
+          color: appColors.onSecondaryContainer,
+        ),
         decoration: InputDecoration(
           // The main styling for the input field
           suffixIcon: widget.isPassword
@@ -49,17 +52,19 @@ class _AuthFormFieldState extends State<AuthFormField> {
                     isObscured
                         ? Icons.visibility_off_rounded
                         : Icons.visibility_rounded,
-                    color: Colors.white.withAlpha(100),
+                    color: appColors.onBackground.withAlpha(100),
                   ),
                 )
               : null,
           contentPadding:
               const EdgeInsets.symmetric(vertical: 18, horizontal: 20),
           filled: true,
-          fillColor: Colors.grey[850]?.withOpacity(0.8),
+          fillColor: appColors.secondaryContainer.withAlpha(200),
           // Hint text styling
           hintText: widget.hintText,
-          hintStyle: TextStyle(color: Colors.grey[500]),
+          hintStyle: TextStyle(
+            color: appColors.onSecondaryContainer.withAlpha(150),
+          ),
           // Prefix icon for visual context
           prefixIcon: Padding(
             padding: const EdgeInsets.only(left: 20.0, right: 10.0),
@@ -78,7 +83,7 @@ class _AuthFormFieldState extends State<AuthFormField> {
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(15.0),
             borderSide: BorderSide(
-              color: Colors.grey[800]!,
+              color: appColors.secondaryContainer.withAlpha(150),
               width: 1.0,
             ),
           ),
@@ -94,7 +99,7 @@ class _AuthFormFieldState extends State<AuthFormField> {
           errorBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(15.0),
             borderSide: BorderSide(
-              color: AppColors.error,
+              color: appColors.error,
               width: 2.0,
             ),
           ),
@@ -102,7 +107,7 @@ class _AuthFormFieldState extends State<AuthFormField> {
           focusedErrorBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(15.0),
             borderSide: BorderSide(
-              color: AppColors.error,
+              color: appColors.error,
               width: 2.0,
             ),
           ),

@@ -6,6 +6,7 @@ abstract class CustomSnackbar {
   static success({required context, required String text}) {
     final theme = Theme.of(context);
     final deviceSize = MediaQuery.of(context).size;
+    final AppColors appColors = AppColors(context);
 
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
     ScaffoldMessenger.of(context).showSnackBar(
@@ -23,7 +24,7 @@ abstract class CustomSnackbar {
           ),
         ),
         // backgroundColor: AppColors.orangeYellow,
-        backgroundColor: AppColors.success,
+        backgroundColor: appColors.success,
       ),
     );
   }
@@ -31,6 +32,7 @@ abstract class CustomSnackbar {
   static error({required context, required String text}) {
     final theme = Theme.of(context);
     final deviceSize = MediaQuery.of(context).size;
+    final AppColors appColors = AppColors(context);
 
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
     ScaffoldMessenger.of(context).showSnackBar(
@@ -47,7 +49,7 @@ abstract class CustomSnackbar {
             color: Colors.white,
           ),
         ),
-        backgroundColor: AppColors.error,
+        backgroundColor: appColors.error,
       ),
     );
   }
