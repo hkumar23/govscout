@@ -2,21 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-import '../constants/app_colors.dart';
-import '../constants/app_language.dart';
-import '../constants/app_routes.dart';
-import '../core/theme/app_theme_mode.dart';
-import '../core/theme/bloc/theme_bloc.dart';
-import '../core/theme/bloc/theme_event.dart';
-import '../core/theme/bloc/theme_state.dart';
-import '../data/repositories/auth_repo.dart';
-import '../logic/blocs/auth/auth_bloc.dart';
-import '../logic/blocs/auth/auth_state.dart';
-import '../utils/app_methods.dart';
-import '../utils/custom_snackbar.dart';
+import '../../constants/app_colors.dart';
+import '../../constants/app_language.dart';
+import '../../constants/app_routes.dart';
+import '../../core/theme/app_theme_mode.dart';
+import '../../core/theme/bloc/theme_bloc.dart';
+import '../../core/theme/bloc/theme_event.dart';
+import '../../core/theme/bloc/theme_state.dart';
+import '../../data/repositories/auth_repo.dart';
+import '../../logic/blocs/auth/auth_bloc.dart';
+import '../../logic/blocs/auth/auth_state.dart';
+import '../../utils/app_methods.dart';
+import '../../utils/custom_snackbar.dart';
 
-class SettingsScreen extends StatelessWidget {
-  const SettingsScreen({super.key});
+class AdminSettingsScreen extends StatelessWidget {
+  const AdminSettingsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

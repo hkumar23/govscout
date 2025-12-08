@@ -15,4 +15,8 @@ abstract class AppLanguage {
   static const fullName = 'Full Name';
   static const logout = 'Logout';
   static const selectTheme = 'Select Theme';
+  static const light = 'Light';
+  static const dark = 'Dark';
+  static const system = 'System';
+  static const dashboard = 'Dashboard';
 }

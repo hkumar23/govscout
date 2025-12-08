@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:govscout/widgets/custom_bottom_nav_bar.dart';
 
 import '../../constants/app_language.dart';
-import '../settings_screen.dart';
+import '../../widgets/custom_bottom_nav_bar.dart';
+import 'settings_screen.dart';
 import 'jobs_feed_screen.dart';
 import 'saved_jobs_screen.dart';
 
@@ -63,17 +63,18 @@ class _CandidateViewState extends State<CandidateView> {
     return Padding(
       padding: EdgeInsets.only(bottom: bottomInset),
       child: Scaffold(
-          appBar: _buildCustomAppBar(_currentIndex),
-          body: IndexedStack(
-            index: _currentIndex,
-            children: _screens,
-          ),
-          bottomNavigationBar: CustomBottomNavBar(
-            selectedIndex: _currentIndex,
-            onTapped: (index) => setState(() => _currentIndex = index),
-            icons: icons,
-            labels: labels,
-          )),
+        appBar: _buildCustomAppBar(_currentIndex),
+        body: IndexedStack(
+          index: _currentIndex,
+          children: _screens,
+        ),
+        bottomNavigationBar: CustomBottomNavBar(
+          selectedIndex: _currentIndex,
+          onTapped: (index) => setState(() => _currentIndex = index),
+          icons: icons,
+          labels: labels,
+        ),
+      ),
     );
   }
 }
