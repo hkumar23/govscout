@@ -23,7 +23,7 @@ enum ApplicationMode {
 }
 
 class Job {
-  final String id;
+  final String? id;
   final String title; // “Junior Engineer – PWD”
   final String department; // SSC, UPSC, Railways, Bank, PSU
   final String organization; // Indian Railways, SBI, DRDO
@@ -77,7 +77,7 @@ class Job {
   final DateTime updatedAt;
 
   Job({
-    required this.id,
+    this.id,
     required this.title,
     required this.department,
     required this.organization,

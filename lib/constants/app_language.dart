@@ -19,4 +19,11 @@ abstract class AppLanguage {
   static const dark = 'Dark';
   static const system = 'System';
   static const dashboard = 'Dashboard';
+  static const addNewJob = "Add New Job";
+  static const department = "Department";
+  static const organisation = "Organization";
+  static const category = "Category";
+  static const description = "Description";
+  static const vacancies = "Vacancies";
+  static const payLevel = "Pay Level";
 }

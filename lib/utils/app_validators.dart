@@ -59,6 +59,16 @@ abstract class AppValidators {
     return null; // Valid input
   }
 
+  static String? integerTypeRequired(String? value) {
+    if (value == null || value.isEmpty) return AppLanguage.required;
+    // Regex to allow only digits 0–9
+    final regex = RegExp(r'^[0-9]+$');
+    if (!regex.hasMatch(value)) {
+      return 'Only digits (0-9) are allowed';
+    }
+    return null; // Valid input
+  }
+
   static String? doubleType(String? value) {
     if (value == null || value.isEmpty) return null;
     if (double.tryParse(value) == null) {
