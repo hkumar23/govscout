@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
-import '../../utils/app_bottom_sheets/add_update_job_bottomsheet.dart';
+import '../../constants/app_routes.dart';
+import 'add_update_job_screen.dart';
 import 'widgets/action_dashboard_tile.dart';
 
 class AdminDashboardScreen extends StatelessWidget {
@@ -34,7 +36,7 @@ class AdminDashboardScreen extends StatelessWidget {
               icon: Icons.add_rounded,
               title: "Add New Job",
               onTap: () {
-                AddUpdateJobBottomsheet.show(context);
+                GoRouter.of(context).push(AppRoutes.addUpdateJob);
               },
             )
           ],

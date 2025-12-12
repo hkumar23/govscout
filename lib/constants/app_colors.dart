@@ -5,6 +5,7 @@ class AppColors {
   AppColors(this.context);
   // Remove const → use getters instead
   Color get primary => const Color(0xFF4169E1);
+  Color get onPrimary => const Color.fromARGB(255, 255, 255, 255);
 
   Color get success => Theme.of(context).brightness == Brightness.dark
       ? const Color(0xFF4CAF50)

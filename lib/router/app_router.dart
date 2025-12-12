@@ -5,6 +5,7 @@ import '../features/admin/admin_view.dart';
 import '../features/candidate/candidate_view.dart';
 import '../features/sign_in_screen.dart';
 import '../features/splash_screen.dart';
+import '../features/admin/add_update_job_screen.dart';
 
 class AppRouter {
   GoRouter get router => GoRouter(
@@ -25,6 +26,10 @@ class AppRouter {
           GoRoute(
             path: AppRoutes.candidate,
             builder: (_, __) => CandidateView(),
+          ),
+          GoRoute(
+            path: AppRoutes.addUpdateJob,
+            builder: (_, __) => AddUpdateJobScreen(),
           )
         ],
       );

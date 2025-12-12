@@ -3,4 +3,5 @@ abstract class AppRoutes {
   static const candidate = '/candidate/home';
   static const signIn = '/sign-in';
   static const splashScreen = '/splash-screen';
+  static const addUpdateJob = '/admin/add-update-job';
 }
