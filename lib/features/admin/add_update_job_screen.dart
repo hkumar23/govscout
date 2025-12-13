@@ -14,6 +14,7 @@ import '../../widgets/app_dropdown_button_formfield.dart';
 import '../../widgets/app_text_form_field.dart';
 import '../../utils/app_methods.dart';
 import '../../utils/app_validators.dart';
+import '../widgets/app_switch_button.dart';
 
 class AddUpdateJobScreen extends StatefulWidget {
   const AddUpdateJobScreen({super.key});
@@ -60,7 +61,7 @@ class _AddUpdateJobScreenState extends State<AddUpdateJobScreen> {
 
   bool? isGenderSpecific;
   bool? isFemaleOnly;
-  bool? isActive;
+  bool isActive = true;
   bool? isAgeRelaxationAllowed;
   bool? isExperienceRequired;
 
@@ -80,30 +81,46 @@ class _AddUpdateJobScreenState extends State<AddUpdateJobScreen> {
       title: titleCtrl.text.trim(),
       department: departmentCtrl.text.trim(),
       organization: organizationCtrl.text.trim(),
-      category: categoryCtrl.text.trim(),
       description: descriptionCtrl.text.trim(),
+      category: categoryCtrl.text.trim(),
       vacancies: int.parse(vacancyCtrl.text),
+      tags: tags,
+      keywords: keywords,
       jobType: selectedJobType,
       workMode: selectedWorkMode,
+      location: jobLocationCtrl.text.trim(),
+      genderSpecific: isGenderSpecific ?? false,
+      femaleOnly: isFemaleOnly ?? false,
+      salaryMin: int.tryParse(minSalaryCtrl.text.trim()),
+      salaryMax: int.tryParse(maxSalaryCtrl.text.trim()),
       payLevel: payLevelCtrl.text.trim(),
+      minAge: int.tryParse(minAgeCtrl.text.trim()),
+      maxAge: int.tryParse(maxAgeCtrl.text.trim()),
+      ageRelaxationAllowed: isAgeRelaxationAllowed,
+      experienceRequired: isExperienceRequired,
+      minExperienceYears: int.tryParse(minExperienceCtrl.text.trim()),
+      qualificationRequired: qualificationsRequired,
+      fieldOfStudyRequired: fieldOfStudyRequired,
+      applicationMode: selectedApplicationMode,
+      applicationLink: applicationLinkCtrl.text.trim(),
+      officialNotificationUrl: officialNotifCtrl.text.trim(),
+      advtNumber: advtNumberCtrl.text.trim(),
       applicationStartDate: startDate!,
       applicationEndDate: endDate!,
-      applicationMode: selectedApplicationMode,
-      officialNotificationUrl: officialNotifCtrl.text.trim(),
+      examDate: examDate,
+      resultDate: resultDate,
       applicationFeeGeneral: int.parse(applicationFeeGeneralCtrl.text),
       applicationFeeObc: int.parse(applicationFeeObcCtrl.text),
       applicationFeeScSt: int.parse(applicationFeeScStCtrl.text),
-      genderSpecific: isGenderSpecific ?? false,
-      femaleOnly: isFemaleOnly ?? false,
       postedByAdminId: AuthRepository().currentUser!.uid,
-      verified: isActive ?? false,
-      isActive: isActive ?? false,
+      verified: isActive,
+      isActive: isActive,
       createdAt: DateTime.now(),
       updatedAt: DateTime.now(),
     );
 
     Navigator.pop(context);
-    // BlocProvider.of<JobManagementBloc>(context).add(AddJobEvent(job));
+    BlocProvider.of<JobManagementBloc>(context).add(AddJobEvent(job));
     // setState(() => isLoading = false);
   }
 
@@ -149,6 +166,9 @@ class _AddUpdateJobScreenState extends State<AddUpdateJobScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  AppSwitchButton(
+                    isActive: isActive,
+                  ),
                   helper.buildSectionTitle("Basic Job Information"),
                   AppTextFormField(
                     controller: titleCtrl,
@@ -488,6 +508,7 @@ class _AddUpdateJobScreenState extends State<AddUpdateJobScreen> {
                             readOnly: true, // Makes the field non-editable
                             labelText: "Application Start Date",
                             prefixIcon: Icons.play_circle_outline,
+                            validator: AppValidators.textRequired,
                             onTap: () async {
                               final pickedDate = await showDatePicker(
                                 context: context,
@@ -512,6 +533,7 @@ class _AddUpdateJobScreenState extends State<AddUpdateJobScreen> {
                             readOnly: true, // Makes the field non-editable
                             labelText: "Application End Date",
                             prefixIcon: Icons.stop_circle_outlined,
+                            validator: AppValidators.textRequired,
                             onTap: () async {
                               final pickedDate = await showDatePicker(
                                 context: context,

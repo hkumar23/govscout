@@ -27,4 +27,6 @@ abstract class AppLanguage {
   static const vacancies = "Vacancies";
   static const payLevel = "Pay Level";
   static const jobTitle = "Job Title";
+  static const active = "Active";
+  static const inactive = "Inactive";
 }
