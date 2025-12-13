@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:govscout/features/admin/widgets/add_update_job_helper.dart';
-import 'package:govscout/utils/custom_snackbar.dart';
-import 'package:govscout/widgets/chip_input_widget.dart';
 import 'package:intl/intl.dart';
 
 import '../../constants/app_colors.dart';
@@ -12,14 +9,17 @@ import '../../data/repositories/auth_repo.dart';
 import '../../logic/blocs/job_management/job_management_bloc.dart';
 import '../../logic/blocs/job_management/job_management_event.dart';
 import '../../logic/blocs/job_management/job_management_state.dart';
+import '../../utils/custom_snackbar.dart';
 import '../../widgets/app_dropdown_button_formfield.dart';
 import '../../widgets/app_text_form_field.dart';
-import '../../utils/app_methods.dart';
 import '../../utils/app_validators.dart';
+import '../../widgets/chip_input_widget.dart';
 import '../widgets/app_switch_button.dart';
+import 'widgets/add_update_job_helper.dart';
 
 class AddUpdateJobScreen extends StatefulWidget {
-  const AddUpdateJobScreen({super.key});
+  final Job? job;
+  const AddUpdateJobScreen({super.key, this.job});
 
   @override
   State<AddUpdateJobScreen> createState() => _AddUpdateJobScreenState();
@@ -121,15 +121,78 @@ class _AddUpdateJobScreenState extends State<AddUpdateJobScreen> {
       updatedAt: DateTime.now(),
     );
 
-    // Navigator.pop(context);
-    BlocProvider.of<JobManagementBloc>(context).add(AddJobEvent(job));
-    // setState(() => isLoading = false);
+    if (widget.job == null) {
+      BlocProvider.of<JobManagementBloc>(context).add(AddJobEvent(job));
+    } else {
+      BlocProvider.of<JobManagementBloc>(context).add(
+        UpdateJobEvent(
+          widget.job!.id!,
+          job.toJson(),
+        ),
+      );
+    }
+  }
+
+  @override
+  void initState() {
+    if (widget.job != null) {
+      titleCtrl.text = widget.job!.title;
+      departmentCtrl.text = widget.job!.department;
+      organizationCtrl.text = widget.job!.organization;
+      categoryCtrl.text = widget.job!.category;
+      descriptionCtrl.text = widget.job!.description;
+      vacancyCtrl.text = widget.job!.vacancies.toString();
+      payLevelCtrl.text = widget.job!.payLevel;
+      applicationFeeGeneralCtrl.text =
+          widget.job!.applicationFeeGeneral.toString();
+      applicationFeeObcCtrl.text = widget.job!.applicationFeeObc.toString();
+      applicationFeeScStCtrl.text = widget.job!.applicationFeeScSt.toString();
+      officialNotifCtrl.text = widget.job!.officialNotificationUrl;
+      startDateCtrl.text =
+          DateFormat("dd MMM yyyy").format(widget.job!.applicationStartDate);
+      endDateCtrl.text =
+          DateFormat("dd MMM yyyy").format(widget.job!.applicationEndDate);
+      jobLocationCtrl.text = widget.job!.location ?? "";
+      minSalaryCtrl.text = widget.job!.salaryMin?.toString() ?? "";
+      maxSalaryCtrl.text = widget.job!.salaryMax?.toString() ?? "";
+      minAgeCtrl.text = widget.job!.minAge?.toString() ?? "";
+      maxAgeCtrl.text = widget.job!.maxAge?.toString() ?? "";
+      minExperienceCtrl.text = widget.job!.minExperienceYears?.toString() ?? "";
+      examDateCtrl.text = widget.job!.examDate != null
+          ? DateFormat("dd MMM yyyy").format(widget.job!.examDate!)
+          : "";
+      resultDateCtrl.text = widget.job!.resultDate != null
+          ? DateFormat("dd MMM yyyy").format(widget.job!.resultDate!)
+          : "";
+      applicationLinkCtrl.text = widget.job!.applicationLink ?? "";
+      advtNumberCtrl.text = widget.job!.advtNumber ?? "";
+
+      selectedJobType = widget.job!.jobType;
+      selectedWorkMode = widget.job!.workMode;
+      selectedApplicationMode = widget.job!.applicationMode;
+
+      startDate = widget.job!.applicationStartDate;
+      endDate = widget.job!.applicationEndDate;
+      examDate = widget.job!.examDate;
+      resultDate = widget.job!.resultDate;
+
+      isGenderSpecific = widget.job!.genderSpecific;
+      isFemaleOnly = widget.job!.femaleOnly;
+      isActive = widget.job!.isActive;
+      isAgeRelaxationAllowed = widget.job!.ageRelaxationAllowed;
+      isExperienceRequired = widget.job!.experienceRequired;
+
+      qualificationsRequired = widget.job!.qualificationRequired;
+      fieldOfStudyRequired = widget.job!.fieldOfStudyRequired;
+      tags = widget.job!.tags;
+      keywords = widget.job!.keywords;
+    }
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     final appColors = AppColors(context);
-    final mediaQuery = MediaQuery.of(context);
     final helper = AddUpdateJobHelper(
       context,
       AppColors(context),
@@ -168,8 +231,8 @@ class _AddUpdateJobScreenState extends State<AddUpdateJobScreen> {
                   ? Center(
                       child: CircularProgressIndicator(),
                     )
-                  : const Text(
-                      "Submit Job",
+                  : Text(
+                      "${widget.job == null ? AppLanguage.submit : AppLanguage.update} Job",
                     ),
             ),
             appBar: AppBar(
@@ -191,6 +254,11 @@ class _AddUpdateJobScreenState extends State<AddUpdateJobScreen> {
                     children: [
                       AppSwitchButton(
                         isActive: isActive,
+                        onChange: (val) {
+                          setState(() {
+                            isActive = val;
+                          });
+                        },
                       ),
                       helper.buildSectionTitle("Basic Job Information"),
                       AppTextFormField(
