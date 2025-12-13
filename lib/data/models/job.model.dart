@@ -197,8 +197,8 @@ class Job {
       AppConstants.category: category,
       AppConstants.description: description,
       AppConstants.vacancies: vacancies,
-      AppConstants.jobType: jobType,
-      AppConstants.workMode: workMode,
+      AppConstants.jobType: jobType.name,
+      AppConstants.workMode: workMode.name,
       AppConstants.location: location,
       AppConstants.salaryMin: salaryMin,
       AppConstants.salaryMax: salaryMax,
@@ -210,11 +210,14 @@ class Job {
       AppConstants.fieldOfStudyRequired: fieldOfStudyRequired,
       AppConstants.experienceRequired: experienceRequired,
       AppConstants.minExperienceYears: minExperienceYears,
-      AppConstants.applicationStartDate: applicationStartDate,
-      AppConstants.applicationEndDate: applicationEndDate,
-      AppConstants.examDate: examDate,
-      AppConstants.resultDate: resultDate,
-      AppConstants.applicationMode: applicationMode,
+      AppConstants.applicationStartDate:
+          Timestamp.fromDate(applicationStartDate),
+      AppConstants.applicationEndDate: Timestamp.fromDate(applicationEndDate),
+      AppConstants.examDate:
+          examDate != null ? Timestamp.fromDate(examDate!) : null,
+      AppConstants.resultDate:
+          resultDate != null ? Timestamp.fromDate(resultDate!) : null,
+      AppConstants.applicationMode: applicationMode.name,
       AppConstants.applicationLink: applicationLink,
       AppConstants.officialNotificationUrl: officialNotificationUrl,
       AppConstants.advtNumber: advtNumber,
@@ -231,8 +234,8 @@ class Job {
       AppConstants.postedByAdminId: postedByAdminId,
       AppConstants.verified: verified,
       AppConstants.isActive: isActive,
-      AppConstants.createdAt: createdAt,
-      AppConstants.updatedAt: updatedAt,
+      AppConstants.createdAt: Timestamp.fromDate(createdAt),
+      AppConstants.updatedAt: Timestamp.fromDate(updatedAt),
     };
   }
 }

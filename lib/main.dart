@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:govscout/logic/blocs/job_management/job_management_bloc.dart';
 
 import 'core/theme/bloc/theme_bloc.dart';
 import 'core/theme/bloc/theme_event.dart';
@@ -21,14 +22,13 @@ void main() async {
 
   runApp(MultiBlocProvider(
     providers: [
-      BlocProvider(
-        create: (context) => AuthBloc(),
-      ),
+      BlocProvider(create: (context) => AuthBloc()),
       BlocProvider(
         create: (context) => ThemeBloc(
           ThemeRepository(),
         ),
       ),
+      BlocProvider(create: (context) => JobManagementBloc()),
     ],
     child: const MyApp(),
   ));

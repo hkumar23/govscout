@@ -3,20 +3,25 @@ import 'package:govscout/widgets/app_text_form_field.dart';
 
 import '../constants/app_colors.dart';
 
-class ChipInputWidget extends StatelessWidget {
+class ChipInputWidget extends StatefulWidget {
   final String title;
   final List<String> items;
-  final Function(String) onAdd;
-  final Function(String) onDelete;
+  // final Function(String) onAdd;
+  // final Function(String) onDelete;
 
   const ChipInputWidget({
     super.key,
     required this.title,
     required this.items,
-    required this.onAdd,
-    required this.onDelete,
+    // required this.onAdd,
+    // required this.onDelete,
   });
 
+  @override
+  State<ChipInputWidget> createState() => _ChipInputWidgetState();
+}
+
+class _ChipInputWidgetState extends State<ChipInputWidget> {
   @override
   Widget build(BuildContext context) {
     final controller = TextEditingController();
@@ -28,7 +33,7 @@ class ChipInputWidget extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.only(bottom: 2),
           child: Text(
-            title,
+            widget.title,
             style: Theme.of(context).textTheme.titleMedium!.copyWith(
                   fontWeight: FontWeight.w500,
                   color: appColors.onBackground.withAlpha(130),
@@ -38,10 +43,14 @@ class ChipInputWidget extends StatelessWidget {
         Wrap(
           spacing: 8.0,
           runSpacing: 4.0,
-          children: items
+          children: widget.items
               .map((item) => Chip(
                     label: Text(item),
-                    onDeleted: () => onDelete(item),
+                    onDeleted: () {
+                      setState(() {
+                        widget.items.remove(item);
+                      });
+                    },
                     deleteIcon: const Icon(Icons.close, size: 18),
                   ))
               .toList(),
@@ -52,7 +61,7 @@ class ChipInputWidget extends StatelessWidget {
             Expanded(
               child: AppTextFormField(
                 controller: controller,
-                hintText: 'Add a ${title.toLowerCase().singular()}',
+                hintText: 'Add a ${widget.title.toLowerCase().singular()}',
               ),
             ),
             IconButton(
@@ -62,7 +71,9 @@ class ChipInputWidget extends StatelessWidget {
               ),
               onPressed: () {
                 if (controller.text.trim().isNotEmpty) {
-                  onAdd(controller.text.trim());
+                  setState(() {
+                    widget.items.add(controller.text.trim());
+                  });
                   controller.clear();
                 }
               },
