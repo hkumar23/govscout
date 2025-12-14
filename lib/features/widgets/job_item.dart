@@ -1,27 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../constants/app_colors.dart';
 import '../../data/models/job.model.dart';
+import '../../logic/blocs/job_management/job_management_bloc.dart';
+import '../../logic/blocs/job_management/job_management_event.dart';
 
 class JobItem extends StatelessWidget {
   final Job job;
   final bool isSaved;
-  final VoidCallback onTap;
-  final VoidCallback onSaveTap;
+  final String currentUserId;
 
   const JobItem({
     super.key,
     required this.job,
     required this.isSaved,
-    required this.onTap,
-    required this.onSaveTap,
+    required this.currentUserId,
   });
 
   @override
   Widget build(BuildContext context) {
     final appColors = AppColors(context);
     return InkWell(
-      onTap: onTap,
+      onTap: () {},
       borderRadius: BorderRadius.circular(16),
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
@@ -57,7 +58,23 @@ class JobItem extends StatelessWidget {
                 ),
                 const SizedBox(width: 6),
                 InkWell(
-                  onTap: onSaveTap,
+                  onTap: () {
+                    // if (isSaved) {
+                    //   BlocProvider.of<JobManagementBloc>(context).add(
+                    //     UnsaveJobEvent(
+                    //       job.id!,
+                    //       currentUserId,
+                    //     ),
+                    //   );
+                    // } else {
+                    //   BlocProvider.of<JobManagementBloc>(context).add(
+                    //     SaveJobEvent(
+                    //       job.id!,
+                    //       currentUserId,
+                    //     ),
+                    //   );
+                    // }
+                  },
                   borderRadius: BorderRadius.circular(50),
                   child: Padding(
                     padding: const EdgeInsets.all(4),
@@ -72,7 +89,7 @@ class JobItem extends StatelessWidget {
               ],
             ),
 
-            const SizedBox(height: 6),
+            // const SizedBox(height: 3),
 
             /// ─── ORGANIZATION ───
             Text(

@@ -15,11 +15,15 @@ class JobManagementLoadingState extends JobManagementState {}
 
 class LoadJobsSuccessState extends JobManagementState {
   final List<Job> jobs;
+  final bool endReached;
 
-  LoadJobsSuccessState(this.jobs);
+  LoadJobsSuccessState({
+    required this.jobs,
+    required this.endReached,
+  });
 }
 
-class AddJobSuccessState extends JobManagementState {}
+class CreateJobSuccessState extends JobManagementState {}
 
 class UpdateJobSuccessState extends JobManagementState {}
 
@@ -51,4 +55,15 @@ class LoadSavedJobsSuccessState extends JobManagementState {
   final List<Job> jobs;
 
   LoadSavedJobsSuccessState(this.jobs);
+}
+
+class JobsFeedLoadingMoreState extends JobManagementState {}
+
+class JobsFeedLoadMoreSuccessState extends JobManagementState {
+  final List<Job> moreJobs;
+  final bool endReached;
+  JobsFeedLoadMoreSuccessState({
+    required this.moreJobs,
+    this.endReached = false,
+  });
 }

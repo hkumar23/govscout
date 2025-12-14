@@ -122,7 +122,7 @@ class _AddUpdateJobScreenState extends State<AddUpdateJobScreen> {
     );
 
     if (widget.job == null) {
-      BlocProvider.of<JobManagementBloc>(context).add(AddJobEvent(job));
+      BlocProvider.of<JobManagementBloc>(context).add(CreateJobEvent(job));
     } else {
       BlocProvider.of<JobManagementBloc>(context).add(
         UpdateJobEvent(
@@ -208,7 +208,7 @@ class _AddUpdateJobScreenState extends State<AddUpdateJobScreen> {
               text: state.e.message,
             );
           }
-          if (state is AddJobSuccessState) {
+          if (state is CreateJobSuccessState) {
             Navigator.of(context).pop();
             CustomSnackbar.success(
               context: context,

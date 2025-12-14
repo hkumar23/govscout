@@ -2,12 +2,12 @@ import '../../../data/models/job.model.dart';
 
 abstract class JobManagementEvent {}
 
-class LoadJobsEvent extends JobManagementEvent {}
+class JobsFeedStartEvent extends JobManagementEvent {}
 
-class AddJobEvent extends JobManagementEvent {
+class CreateJobEvent extends JobManagementEvent {
   final Job job;
 
-  AddJobEvent(this.job);
+  CreateJobEvent(this.job);
 }
 
 class UpdateJobEvent extends JobManagementEvent {
@@ -123,3 +123,17 @@ class LoadAppliedJobsEvent extends JobManagementEvent {
 
   LoadAppliedJobsEvent(this.userId);
 }
+
+class JobsFeedNewJobsArrivedEvent extends JobManagementEvent {
+  // from stream
+  final List<Job> newJobs;
+  final List<Job> oldJobs;
+  JobsFeedNewJobsArrivedEvent({
+    required this.newJobs,
+    required this.oldJobs,
+  });
+}
+
+class JobsFeedLoadMoreEvent extends JobManagementEvent {}
+
+class JobsFeedRefreshEvent extends JobManagementEvent {}
