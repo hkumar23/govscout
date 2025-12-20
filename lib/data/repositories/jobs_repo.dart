@@ -3,9 +3,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../constants/app_constants.dart';
 import '../../constants/firebase_collections.dart';
 import '../models/job.model.dart';
+import 'user_repo.dart';
 
 class JobsRepository {
   final _firestore = FirebaseFirestore.instance;
+  final _userRepo = UserRepository();
 
   Future<void> addJob(Job job) async {
     try {
@@ -89,6 +91,83 @@ class JobsRepository {
   Future<void> deleteJob(String jobId) async {
     try {
       await _firestore.collection(FirebaseCollections.jobs).doc(jobId).delete();
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<void> saveJob({
+    required String jobId,
+    required String userId,
+  }) async {
+    try {
+      final user = await _userRepo.getUser(userId);
+      if (user == null) {
+        throw "User not found in our database";
+      }
+
+      final jobDocRef =
+          _firestore.collection(FirebaseCollections.jobs).doc(jobId);
+      final roleDocRef = _firestore.collection(user.role).doc(userId);
+
+      final jobDoc = await jobDocRef.get();
+      final roleDoc = await roleDocRef.get();
+      if (!jobDoc.exists) throw "Job does not exist!";
+      if (!roleDoc.exists) {
+        throw "${user.role} not found in our database!";
+      }
+
+      final List<String> jobSavedByUserIds =
+          List<String>.from(jobDoc.data()![AppConstants.savedByUserIds] ?? []);
+      final List<String> roleSavedJobIds =
+          List<String>.from(roleDoc.data()![AppConstants.savedJobIds] ?? []);
+
+      jobSavedByUserIds.add(userId);
+      roleSavedJobIds.add(jobId);
+
+      jobDocRef.update({
+        AppConstants.savedByUserIds: jobSavedByUserIds,
+      });
+      roleDocRef.update({
+        AppConstants.savedJobIds: roleSavedJobIds,
+      });
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<void> unsaveJob(String jobId, String userId) async {
+    try {
+      final user = await _userRepo.getUser(userId);
+      if (user == null) {
+        throw "User not found in our database";
+      }
+
+      final jobDocRef =
+          _firestore.collection(FirebaseCollections.jobs).doc(jobId);
+      final roleDocRef = _firestore.collection(user.role).doc(userId);
+
+      final jobDoc = await jobDocRef.get();
+      final roleDoc = await roleDocRef.get();
+      if (jobDoc.data() == null) throw "Job does not exist!";
+      if (roleDoc.data() == null) {
+        throw "${user.role} not found in our database!";
+      }
+
+      final List<String> jobSavedByUserIds =
+          List<String>.from(jobDoc.data()![AppConstants.savedByUserIds] ?? []);
+      final List<String> roleSavedJobIds =
+          List<String>.from(roleDoc.data()![AppConstants.savedJobIds] ?? []);
+
+      jobSavedByUserIds.remove(userId);
+      roleSavedJobIds.remove(jobId);
+
+      jobDocRef.update({
+        AppConstants.savedByUserIds: jobSavedByUserIds,
+      });
+      roleDocRef.update({
+        AppConstants.savedJobIds: roleSavedJobIds,
+      });
     } catch (e) {
       rethrow;
     }

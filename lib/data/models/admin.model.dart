@@ -8,6 +8,7 @@ class Admin {
   final String? phone;
   final String? photoUrl;
 
+  final List<String> savedJobIds;
   final List<String> permissions;
   final List<String> createdJobIds;
   final List<String> editedJobIds;
@@ -21,6 +22,7 @@ class Admin {
     required this.email,
     this.phone,
     this.photoUrl,
+    this.savedJobIds = const [],
     this.permissions = const [],
     this.createdJobIds = const [],
     this.editedJobIds = const [],
@@ -35,6 +37,7 @@ class Admin {
       email: json[AppConstants.email],
       phone: json[AppConstants.phone],
       photoUrl: json[AppConstants.photoUrl],
+      savedJobIds: List<String>.from(json[AppConstants.savedJobIds] ?? []),
       permissions: List<String>.from(json[AppConstants.permissions] ?? []),
       createdJobIds: List<String>.from(json[AppConstants.createdJobIds] ?? []),
       editedJobIds: List<String>.from(json[AppConstants.editedJobIds] ?? []),
@@ -50,6 +53,7 @@ class Admin {
       AppConstants.email: email,
       AppConstants.phone: phone,
       AppConstants.photoUrl: photoUrl,
+      AppConstants.savedJobIds: savedJobIds,
       AppConstants.permissions: permissions,
       AppConstants.createdJobIds: createdJobIds,
       AppConstants.editedJobIds: editedJobIds,

@@ -59,21 +59,21 @@ class JobItem extends StatelessWidget {
                 const SizedBox(width: 6),
                 InkWell(
                   onTap: () {
-                    // if (isSaved) {
-                    //   BlocProvider.of<JobManagementBloc>(context).add(
-                    //     UnsaveJobEvent(
-                    //       job.id!,
-                    //       currentUserId,
-                    //     ),
-                    //   );
-                    // } else {
-                    //   BlocProvider.of<JobManagementBloc>(context).add(
-                    //     SaveJobEvent(
-                    //       job.id!,
-                    //       currentUserId,
-                    //     ),
-                    //   );
-                    // }
+                    if (isSaved) {
+                      BlocProvider.of<JobManagementBloc>(context).add(
+                        UnsaveJobEvent(
+                          job.id!,
+                          currentUserId,
+                        ),
+                      );
+                    } else {
+                      BlocProvider.of<JobManagementBloc>(context).add(
+                        SaveJobEvent(
+                          job.id!,
+                          currentUserId,
+                        ),
+                      );
+                    }
                   },
                   borderRadius: BorderRadius.circular(50),
                   child: Padding(

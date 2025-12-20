@@ -40,21 +40,44 @@ class JobManagementBloc extends Bloc<JobManagementEvent, JobManagementState> {
     SaveJobEvent event,
     Emitter<JobManagementState> emit,
   ) async {
-    // try {
-    // _jobsRepo.saveJob();
-    // } catch (e) {
-    //   emit(
-    //     JobManagementErrorState(
-    //       AppException(e.toString()),
-    //     ),
-    //   );
-    // }
+    emit(JobManagementLoadingState());
+    try {
+      final userId = event.userId;
+      await _jobsRepo.saveJob(
+        jobId: event.jobId,
+        userId: event.userId,
+      );
+      emit(SaveJobSuccessState());
+      // add(LoadSavedJobsEvent(userId));
+      add(JobsFeedStartEvent());
+    } catch (e) {
+      emit(
+        JobManagementErrorState(
+          AppException(e.toString()),
+        ),
+      );
+    }
   }
 
   void _onUnsaveJob(
     UnsaveJobEvent event,
     Emitter<JobManagementState> emit,
-  ) async {}
+  ) async {
+    emit(JobManagementLoadingState());
+    try {
+      final userId = event.userId;
+      await _jobsRepo.unsaveJob(event.jobId, event.userId);
+      emit(UnsaveJobSuccessState());
+      // add(LoadSavedJobsEvent(userId));
+      add(JobsFeedStartEvent());
+    } catch (e) {
+      emit(
+        JobManagementErrorState(
+          AppException(e.toString()),
+        ),
+      );
+    }
+  }
 
   void _onJobsFeedNewJobsArrived(
     JobsFeedNewJobsArrivedEvent event,
