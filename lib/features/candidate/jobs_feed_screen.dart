@@ -198,8 +198,6 @@ class _JobsFeedScreenState extends State<JobsFeedScreen> {
                         child: JobItem(
                           job: job,
                           currentUserId: authRepo.currentUser!.uid,
-                          isSaved: job.savedByUserIds
-                              .contains(authRepo.currentUser!.uid),
                         ),
                       );
                     },

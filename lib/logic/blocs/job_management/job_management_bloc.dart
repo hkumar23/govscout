@@ -40,16 +40,15 @@ class JobManagementBloc extends Bloc<JobManagementEvent, JobManagementState> {
     SaveJobEvent event,
     Emitter<JobManagementState> emit,
   ) async {
-    emit(JobManagementLoadingState());
+    // emit(JobManagementLoadingState());
     try {
-      final userId = event.userId;
       await _jobsRepo.saveJob(
         jobId: event.jobId,
         userId: event.userId,
       );
       emit(SaveJobSuccessState());
       // add(LoadSavedJobsEvent(userId));
-      add(JobsFeedStartEvent());
+      // add(JobsFeedStartEvent());
     } catch (e) {
       emit(
         JobManagementErrorState(
@@ -63,13 +62,12 @@ class JobManagementBloc extends Bloc<JobManagementEvent, JobManagementState> {
     UnsaveJobEvent event,
     Emitter<JobManagementState> emit,
   ) async {
-    emit(JobManagementLoadingState());
+    // emit(JobManagementLoadingState());
     try {
-      final userId = event.userId;
       await _jobsRepo.unsaveJob(event.jobId, event.userId);
       emit(UnsaveJobSuccessState());
       // add(LoadSavedJobsEvent(userId));
-      add(JobsFeedStartEvent());
+      // add(JobsFeedStartEvent());
     } catch (e) {
       emit(
         JobManagementErrorState(

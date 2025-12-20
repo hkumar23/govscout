@@ -6,21 +6,28 @@ import '../../data/models/job.model.dart';
 import '../../logic/blocs/job_management/job_management_bloc.dart';
 import '../../logic/blocs/job_management/job_management_event.dart';
 
-class JobItem extends StatelessWidget {
+class JobItem extends StatefulWidget {
   final Job job;
-  final bool isSaved;
   final String currentUserId;
 
   const JobItem({
     super.key,
     required this.job,
-    required this.isSaved,
     required this.currentUserId,
   });
 
   @override
+  State<JobItem> createState() => _JobItemState();
+}
+
+class _JobItemState extends State<JobItem> {
+  bool isLoading = false;
+
+  @override
   Widget build(BuildContext context) {
+    bool isSaved = widget.job.savedByUserIds.contains(widget.currentUserId);
     final appColors = AppColors(context);
+
     return InkWell(
       onTap: () {},
       borderRadius: BorderRadius.circular(16),
@@ -48,7 +55,7 @@ class JobItem extends StatelessWidget {
               children: [
                 Expanded(
                   child: Text(
-                    job.title,
+                    widget.job.title,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
@@ -60,17 +67,24 @@ class JobItem extends StatelessWidget {
                 InkWell(
                   onTap: () {
                     if (isSaved) {
+                      setState(() {
+                        widget.job.savedByUserIds.remove(widget.currentUserId);
+                      });
+
                       BlocProvider.of<JobManagementBloc>(context).add(
                         UnsaveJobEvent(
-                          job.id!,
-                          currentUserId,
+                          widget.job.id!,
+                          widget.currentUserId,
                         ),
                       );
                     } else {
+                      setState(() {
+                        widget.job.savedByUserIds.add(widget.currentUserId);
+                      });
                       BlocProvider.of<JobManagementBloc>(context).add(
                         SaveJobEvent(
-                          job.id!,
-                          currentUserId,
+                          widget.job.id!,
+                          widget.currentUserId,
                         ),
                       );
                     }
@@ -78,12 +92,14 @@ class JobItem extends StatelessWidget {
                   borderRadius: BorderRadius.circular(50),
                   child: Padding(
                     padding: const EdgeInsets.all(4),
-                    child: Icon(
-                      isSaved ? Icons.bookmark : Icons.bookmark_border,
-                      color: isSaved
-                          ? Theme.of(context).colorScheme.primary
-                          : Colors.grey,
-                    ),
+                    child: isLoading
+                        ? CircularProgressIndicator()
+                        : Icon(
+                            isSaved ? Icons.bookmark : Icons.bookmark_border,
+                            color: isSaved
+                                ? Theme.of(context).colorScheme.primary
+                                : Colors.grey,
+                          ),
                   ),
                 ),
               ],
@@ -93,7 +109,7 @@ class JobItem extends StatelessWidget {
 
             /// ─── ORGANIZATION ───
             Text(
-              job.organization,
+              widget.job.organization,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     color: Colors.grey.shade700,
                   ),
@@ -106,12 +122,13 @@ class JobItem extends StatelessWidget {
               spacing: 14,
               runSpacing: 6,
               children: [
-                _infoChip(Icons.category, job.category),
-                _infoChip(Icons.location_on, job.location ?? "N/A"),
-                if (job.salaryMin != null || job.salaryMax != null)
+                _infoChip(Icons.category, widget.job.category),
+                _infoChip(Icons.location_on, widget.job.location ?? "N/A"),
+                if (widget.job.salaryMin != null ||
+                    widget.job.salaryMax != null)
                   _infoChip(
                     Icons.currency_rupee,
-                    "${job.salaryMin ?? 'N/A'} - ${job.salaryMax ?? 'N/A'}",
+                    "${widget.job.salaryMin ?? 'N/A'} - ${widget.job.salaryMax ?? 'N/A'}",
                   ),
               ],
             ),
@@ -124,7 +141,7 @@ class JobItem extends StatelessWidget {
                 const Icon(Icons.schedule, size: 16, color: Colors.redAccent),
                 const SizedBox(width: 6),
                 Text(
-                  "Last date: ${_formatDate(job.applicationEndDate)}",
+                  "Last date: ${_formatDate(widget.job.applicationEndDate)}",
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         color: Colors.redAccent,
                         fontWeight: FontWeight.w600,
