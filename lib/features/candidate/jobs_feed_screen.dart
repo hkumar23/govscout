@@ -5,7 +5,6 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 import '../../constants/app_colors.dart';
-import '../../constants/app_language.dart';
 import '../../constants/app_routes.dart';
 import '../../data/models/job.model.dart';
 import '../../data/repositories/auth_repo.dart';

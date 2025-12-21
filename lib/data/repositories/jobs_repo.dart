@@ -172,24 +172,63 @@ class JobsRepository {
       rethrow;
     }
   }
-  // Reaction (like/unlike)
-  // Future<void> toggleLike({required String postId, required String uid}) async {
-  //   final likeRef = _firestore
-  //       .collection('posts')
-  //       .doc(postId)
-  //       .collection('reactions')
-  //       .doc(uid);
-  //   await _firestore.runTransaction((tx) async {
-  //     final likeSnap = await tx.get(likeRef);
-  //     final postRef = _firestore.collection('posts').doc(postId);
-  //     if (likeSnap.exists) {
-  //       tx.delete(likeRef);
-  //       tx.update(postRef, {'likesCount': FieldValue.increment(-1)});
-  //     } else {
-  //       tx.set(likeRef,
-  //           {'type': 'like', 'createdAt': FieldValue.serverTimestamp()});
-  //       tx.update(postRef, {'likesCount': FieldValue.increment(1)});
-  //     }
-  // });
-  // }
+
+  List<List<T>> chunkList<T>(List<T> list, int chunkSize) {
+    final chunks = <List<T>>[];
+    for (var i = 0; i < list.length; i += chunkSize) {
+      chunks.add(
+        list.sublist(
+          i,
+          i + chunkSize > list.length ? list.length : i + chunkSize,
+        ),
+      );
+    }
+    return chunks;
+  }
+
+  Future<List<Job>> getSavedJobs(String userId) async {
+    try {
+      // 1️⃣ Get saved job IDs
+      final user = await _userRepo.getUser(userId);
+      if (user == null) {
+        throw "User not found in our database!";
+      }
+
+      final roleDoc = await _firestore.collection(user.role).doc(userId).get();
+      if (!roleDoc.exists) {
+        throw "${user.role} not found in our database!";
+      }
+
+      final jobIds =
+          List<String>.from(roleDoc.data()![AppConstants.savedJobIds] ?? []);
+      if (jobIds.isEmpty) return [];
+
+      // 2️⃣ Split into chunks of 10
+      final chunks = chunkList(jobIds, 10);
+
+      final List<Job> jobs = [];
+
+      // 3️⃣ Fetch each chunk
+      for (final chunk in chunks) {
+        final snapshot = await FirebaseFirestore.instance
+            .collection(FirebaseCollections.jobs)
+            .where(
+              FieldPath.documentId,
+              whereIn: chunk,
+            )
+            .get();
+
+        jobs.addAll(
+          snapshot.docs.map((doc) => Job.fromJson(doc.data(), doc.id)),
+        );
+      }
+
+      // 4️⃣ Sort (important!)
+      jobs.sort((a, b) => b.updatedAt.compareTo(a.updatedAt));
+
+      return jobs;
+    } catch (e) {
+      rethrow;
+    }
+  }
 }

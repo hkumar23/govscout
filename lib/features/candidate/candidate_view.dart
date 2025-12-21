@@ -18,7 +18,7 @@ class _CandidateViewState extends State<CandidateView> {
 
   final List<Widget> _screens = [
     JobsFeedScreen(isAdminView: false),
-    SavedJobsScreen(),
+    SavedJobsScreen(isAdminView: false),
     SettingsScreen(),
   ];
 

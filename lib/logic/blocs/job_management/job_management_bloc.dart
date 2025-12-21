@@ -27,6 +27,7 @@ class JobManagementBloc extends Bloc<JobManagementEvent, JobManagementState> {
     on<DeleteJobEvent>(_onDeleteJob);
     on<SaveJobEvent>(_onSaveJob);
     on<UnsaveJobEvent>(_onUnsaveJob);
+    on<LoadSavedJobsEvent>(_onLoadSavedJobs);
 
     on<UpdateJobEvent>(_onUpdateJob);
     on<VerifyJobEvent>(_onVerifyJob);
@@ -34,6 +35,23 @@ class JobManagementBloc extends Bloc<JobManagementEvent, JobManagementState> {
     on<SearchJobsEvent>(_onSearchJobs);
     on<SortJobsEvent>(_onSortJobs);
     on<RefreshJobsEvent>(_onRefreshJobs);
+  }
+
+  void _onLoadSavedJobs(
+    LoadSavedJobsEvent event,
+    Emitter<JobManagementState> emit,
+  ) async {
+    emit(LoadSavedJobsLoadingState());
+    try {
+      final jobs = await _jobsRepo.getSavedJobs(event.userId);
+      emit(LoadSavedJobsSuccessState(jobs));
+    } catch (e) {
+      emit(
+        JobManagementErrorState(
+          AppException(e.toString()),
+        ),
+      );
+    }
   }
 
   void _onSaveJob(
@@ -47,8 +65,7 @@ class JobManagementBloc extends Bloc<JobManagementEvent, JobManagementState> {
         userId: event.userId,
       );
       emit(SaveJobSuccessState());
-      // add(LoadSavedJobsEvent(userId));
-      // add(JobsFeedStartEvent());
+      add(LoadSavedJobsEvent(event.userId));
     } catch (e) {
       emit(
         JobManagementErrorState(
@@ -66,8 +83,7 @@ class JobManagementBloc extends Bloc<JobManagementEvent, JobManagementState> {
     try {
       await _jobsRepo.unsaveJob(event.jobId, event.userId);
       emit(UnsaveJobSuccessState());
-      // add(LoadSavedJobsEvent(userId));
-      // add(JobsFeedStartEvent());
+      add(LoadSavedJobsEvent(event.userId));
     } catch (e) {
       emit(
         JobManagementErrorState(

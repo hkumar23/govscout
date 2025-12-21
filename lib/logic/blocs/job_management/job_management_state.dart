@@ -57,6 +57,8 @@ class LoadSavedJobsSuccessState extends JobManagementState {
   LoadSavedJobsSuccessState(this.jobs);
 }
 
+class LoadSavedJobsLoadingState extends JobManagementState {}
+
 class JobsFeedLoadingMoreState extends JobManagementState {}
 
 class JobsFeedLoadMoreSuccessState extends JobManagementState {
