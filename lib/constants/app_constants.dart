@@ -73,4 +73,8 @@ abstract class AppConstants {
   static const postedByAdminId = 'postedByAdminId';
   static const verified = 'verified';
   static const isActive = 'isActive';
+  static const fcmToken = 'fcmToken';
+  static const postTitle = "postTitle";
+  static const postBody = "postBody";
+  static const createdBy = "createdBy";
 }

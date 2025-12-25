@@ -2,16 +2,19 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
+import '../../../constants/app_constants.dart';
 import '../../../constants/firebase_collections.dart';
 import '../../../data/repositories/jobs_repo.dart';
 import '../../../utils/app_exception.dart';
+import '../../../utils/app_methods.dart';
 import 'job_management_event.dart';
 import 'job_management_state.dart';
 
 class JobManagementBloc extends Bloc<JobManagementEvent, JobManagementState> {
   final JobsRepository _jobsRepo = JobsRepository();
-  // final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   StreamSubscription? _subNew;
   DocumentSnapshot? _lastDoc; // keep Firestore doc for pagination
@@ -203,6 +206,11 @@ class JobManagementBloc extends Bloc<JobManagementEvent, JobManagementState> {
     emit(JobManagementLoadingState());
     try {
       _jobsRepo.addJob(event.job);
+      AppMethods.sendNewJobPostNotification(
+        event.job.title,
+        event.job.description,
+        _auth.currentUser!.uid,
+      );
       emit(CreateJobSuccessState());
     } catch (e) {
       emit(

@@ -1,9 +1,8 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:govscout/logic/blocs/job_management/job_management_bloc.dart';
 
 import 'core/theme/bloc/theme_bloc.dart';
 import 'core/theme/bloc/theme_event.dart';
@@ -11,14 +10,34 @@ import 'core/theme/bloc/theme_state.dart';
 import 'core/theme/theme_repository.dart';
 import 'firebase_options.dart';
 import 'logic/blocs/auth/auth_bloc.dart';
+import 'logic/blocs/job_management/job_management_bloc.dart';
 import 'router/app_router.dart';
 import 'core/theme/app_theme_mode.dart';
+import '../../../utils/utils_android_stub.dart'
+    if (dart.library.io) '../../../utils/utils_android.dart';
+import 'utils/services/notification_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  // ✅ Enable Firebase Messaging Auto Init
+  try {
+    if (!kIsWeb) enableFirebaseMessagingAutoInit();
+  } catch (e) {
+    debugPrint("Failed to enable Firebase Messaging auto-init: $e");
+  }
+
+  // ✅ Register background message handler
+  if (!kIsWeb) registerBackgroundMessageHandler();
+
+  // ✅ Initialize your notification service
+  if (!kIsWeb) {
+    final notificationService = NotificationsService();
+    await notificationService.init();
+  }
 
   runApp(MultiBlocProvider(
     providers: [

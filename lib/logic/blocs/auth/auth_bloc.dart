@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 
 import '../../../constants/app_constants.dart';
 import '../../../data/models/user.model.dart';
@@ -7,6 +8,7 @@ import '../../../data/repositories/auth_repo.dart';
 import '../../../data/repositories/candidate_repo.dart';
 import '../../../data/repositories/user_repo.dart';
 import '../../../utils/app_exception.dart';
+import '../../../utils/services/notification_service.dart';
 import 'auth_event.dart';
 import 'auth_state.dart';
 
@@ -83,6 +85,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       //   await NotificationsService()
       //       .updateTokenForUser(AuthRepository().currentUser!.uid);
       // }
+      if (!kIsWeb) {
+        await NotificationsService()
+            .updateTokenForUser(AuthRepository().currentUser!.uid);
+      }
 
       emit(LoggedInState(
         role: user.role,
@@ -136,6 +142,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         },
         currentUser.uid,
       );
+
+      if (!kIsWeb) {
+        await NotificationsService()
+            .updateTokenForUser(AuthRepository().currentUser!.uid);
+      }
 
       // AppMethods.updateFcmToken(newUser.uid, newUser.role);
       // if (!kIsWeb) {
