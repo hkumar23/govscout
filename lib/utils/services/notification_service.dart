@@ -4,6 +4,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 import '../../constants/app_constants.dart';
+import '../../constants/assets.dart';
 import '../../constants/firebase_collections.dart';
 import '../../data/repositories/auth_repo.dart';
 import '../../data/repositories/user_repo.dart';
@@ -86,6 +87,7 @@ class NotificationsService {
       'General Notifications',
       importance: Importance.high,
       priority: Priority.high,
+      icon: 'ic_notification',
     );
 
     const NotificationDetails details =
