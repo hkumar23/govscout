@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
 import '../../constants/app_colors.dart';
+import '../../constants/app_constants.dart';
 import '../../constants/app_language.dart';
 import '../../data/models/job.model.dart';
 import '../../data/repositories/auth_repo.dart';
@@ -51,6 +52,8 @@ class _AddUpdateJobScreenState extends State<AddUpdateJobScreen> {
   final resultDateCtrl = TextEditingController();
   final applicationLinkCtrl = TextEditingController();
   final advtNumberCtrl = TextEditingController();
+  final noteCtrl = TextEditingController();
+  final howToApplyCtrl = TextEditingController();
 
   JobType selectedJobType = JobType.permanent;
   WorkMode selectedWorkMode = WorkMode.offline;
@@ -80,46 +83,49 @@ class _AddUpdateJobScreenState extends State<AddUpdateJobScreen> {
     // setState(() => isLoading = true);
 
     final job = Job(
-      title: titleCtrl.text.trim(),
-      department: departmentCtrl.text.trim(),
-      organization: organizationCtrl.text.trim(),
-      description: descriptionCtrl.text.trim(),
-      category: categoryCtrl.text.trim(),
-      vacancies: int.parse(vacancyCtrl.text),
-      tags: tags,
-      keywords: keywords,
-      jobType: selectedJobType,
-      workMode: selectedWorkMode,
-      location: jobLocationCtrl.text.trim(),
-      genderSpecific: isGenderSpecific ?? false,
-      femaleOnly: isFemaleOnly ?? false,
-      salaryMin: int.tryParse(minSalaryCtrl.text.trim()),
-      salaryMax: int.tryParse(maxSalaryCtrl.text.trim()),
-      payLevel: payLevelCtrl.text.trim(),
-      minAge: int.tryParse(minAgeCtrl.text.trim()),
-      maxAge: int.tryParse(maxAgeCtrl.text.trim()),
-      ageRelaxationAllowed: isAgeRelaxationAllowed,
-      experienceRequired: isExperienceRequired,
-      minExperienceYears: int.tryParse(minExperienceCtrl.text.trim()),
-      qualificationRequired: qualificationsRequired,
-      fieldOfStudyRequired: fieldOfStudyRequired,
-      applicationMode: selectedApplicationMode,
-      applicationLink: applicationLinkCtrl.text.trim(),
-      officialNotificationUrl: officialNotifCtrl.text.trim(),
-      advtNumber: advtNumberCtrl.text.trim(),
-      applicationStartDate: startDate!,
-      applicationEndDate: endDate!,
-      examDate: examDate,
-      resultDate: resultDate,
-      applicationFeeGeneral: int.parse(applicationFeeGeneralCtrl.text),
-      applicationFeeObc: int.parse(applicationFeeObcCtrl.text),
-      applicationFeeScSt: int.parse(applicationFeeScStCtrl.text),
-      postedByAdminId: AuthRepository().currentUser!.uid,
-      verified: isActive,
-      isActive: isActive,
-      createdAt: DateTime.now(),
-      updatedAt: DateTime.now(),
-    );
+        title: titleCtrl.text.trim(),
+        department: departmentCtrl.text.trim(),
+        organization: organizationCtrl.text.trim(),
+        description: descriptionCtrl.text.trim(),
+        category: categoryCtrl.text.trim(),
+        vacancies: int.parse(vacancyCtrl.text),
+        tags: tags,
+        keywords: keywords,
+        jobType: selectedJobType,
+        workMode: selectedWorkMode,
+        location: jobLocationCtrl.text.trim(),
+        genderSpecific: isGenderSpecific ?? false,
+        femaleOnly: isFemaleOnly ?? false,
+        salaryMin: int.tryParse(minSalaryCtrl.text.trim()),
+        salaryMax: int.tryParse(maxSalaryCtrl.text.trim()),
+        payLevel: payLevelCtrl.text.trim(),
+        minAge: int.tryParse(minAgeCtrl.text.trim()),
+        maxAge: int.tryParse(maxAgeCtrl.text.trim()),
+        ageRelaxationAllowed: isAgeRelaxationAllowed,
+        experienceRequired: isExperienceRequired,
+        minExperienceYears: int.tryParse(minExperienceCtrl.text.trim()),
+        qualificationRequired: qualificationsRequired,
+        fieldOfStudyRequired: fieldOfStudyRequired,
+        applicationMode: selectedApplicationMode,
+        applicationLink: applicationLinkCtrl.text.trim(),
+        officialNotificationUrl: officialNotifCtrl.text.trim(),
+        advtNumber: advtNumberCtrl.text.trim(),
+        applicationStartDate: startDate!,
+        applicationEndDate: endDate!,
+        examDate: examDate,
+        resultDate: resultDate,
+        applicationFeeGeneral: int.parse(applicationFeeGeneralCtrl.text),
+        applicationFeeObc: int.parse(applicationFeeObcCtrl.text),
+        applicationFeeScSt: int.parse(applicationFeeScStCtrl.text),
+        postedByAdminId: AuthRepository().currentUser!.uid,
+        verified: isActive,
+        isActive: isActive,
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+        additionalData: {
+          AppConstants.note: noteCtrl.text.trim(),
+          AppConstants.howToApply: howToApplyCtrl.text.trim(),
+        });
 
     if (widget.job == null) {
       BlocProvider.of<JobManagementBloc>(context).add(CreateJobEvent(job));
@@ -694,6 +700,24 @@ class _AddUpdateJobScreenState extends State<AddUpdateJobScreen> {
                         keyboardType: TextInputType.number,
                         prefixIcon: Icons.currency_rupee,
                         validator: AppValidators.doubleTypeRequired,
+                        bottomPadding: 16,
+                      ),
+                      helper.buildSectionTitle("Other Information"),
+                      SizedBox(height: 4),
+                      AppTextFormField(
+                        controller: noteCtrl,
+                        labelText: "Note",
+                        keyboardType: TextInputType.text,
+                        prefixIcon: Icons.note_outlined,
+                        maxLines: 3,
+                        bottomPadding: 16,
+                      ),
+                      AppTextFormField(
+                        controller: howToApplyCtrl,
+                        labelText: "How To Apply",
+                        keyboardType: TextInputType.text,
+                        prefixIcon: Icons.note_alt_outlined,
+                        maxLines: 3,
                         bottomPadding: 16,
                       ),
                       const SizedBox(height: 60),

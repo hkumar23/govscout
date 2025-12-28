@@ -77,4 +77,7 @@ abstract class AppConstants {
   static const postTitle = "postTitle";
   static const postBody = "postBody";
   static const createdBy = "createdBy";
+  static const additionalData = "additionalData";
+  static const note = "note";
+  static const howToApply = "howToApply";
 }

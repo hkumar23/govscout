@@ -76,20 +76,22 @@ class Job {
   final DateTime createdAt;
   final DateTime updatedAt;
 
+  final Map<String, dynamic>? additionalData;
+
   Job({
     this.id,
-    required this.title, //✅
-    required this.department, //✅
-    required this.organization, //✅
-    required this.category, //✅
-    required this.description, //✅
-    required this.vacancies, //✅
-    required this.jobType, //✅
-    required this.workMode, //✅
+    required this.title,
+    required this.department,
+    required this.organization,
+    required this.category,
+    required this.description,
+    required this.vacancies,
+    required this.jobType,
+    required this.workMode,
     this.location,
     this.salaryMin,
     this.salaryMax,
-    required this.payLevel, //✅
+    required this.payLevel,
     this.minAge,
     this.maxAge,
     this.ageRelaxationAllowed,
@@ -97,17 +99,17 @@ class Job {
     this.fieldOfStudyRequired = const [],
     this.experienceRequired,
     this.minExperienceYears,
-    required this.applicationStartDate, //✅
-    required this.applicationEndDate, //✅
+    required this.applicationStartDate,
+    required this.applicationEndDate,
     this.examDate,
     this.resultDate,
-    required this.applicationMode, //✅
+    required this.applicationMode,
     this.applicationLink,
-    required this.officialNotificationUrl, //✅
+    required this.officialNotificationUrl,
     this.advtNumber,
-    required this.applicationFeeGeneral, //✅
-    required this.applicationFeeObc, //✅
-    required this.applicationFeeScSt, //✅
+    required this.applicationFeeGeneral,
+    required this.applicationFeeObc,
+    required this.applicationFeeScSt,
     this.tags = const [],
     this.keywords = const [],
     this.savedByUserIds = const [],
@@ -120,6 +122,7 @@ class Job {
     required this.isActive,
     required this.createdAt,
     required this.updatedAt,
+    this.additionalData,
   });
 
   factory Job.fromJson(Map<String, dynamic> json, String jobId) {
@@ -186,6 +189,8 @@ class Job {
       isActive: json[AppConstants.isActive],
       createdAt: (json[AppConstants.createdAt] as Timestamp).toDate(),
       updatedAt: (json[AppConstants.updatedAt] as Timestamp).toDate(),
+      additionalData:
+          Map<String, dynamic>.from(json[AppConstants.additionalData] ?? {}),
     );
   }
 
@@ -236,6 +241,7 @@ class Job {
       AppConstants.isActive: isActive,
       AppConstants.createdAt: Timestamp.fromDate(createdAt),
       AppConstants.updatedAt: Timestamp.fromDate(updatedAt),
+      AppConstants.additionalData: additionalData,
     };
   }
 }
