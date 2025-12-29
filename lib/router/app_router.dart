@@ -1,6 +1,9 @@
 import 'package:go_router/go_router.dart';
+import 'package:govscout/features/job_details_screen.dart';
 
+import '../constants/app_constants.dart';
 import '../constants/app_routes.dart';
+import '../data/models/job.model.dart';
 import '../features/admin/admin_view.dart';
 import '../features/candidate/candidate_view.dart';
 import '../features/sign_in_screen.dart';
@@ -30,6 +33,13 @@ class AppRouter {
           GoRoute(
             path: AppRoutes.addUpdateJob,
             builder: (_, __) => AddUpdateJobScreen(),
+          ),
+          GoRoute(
+            path: AppRoutes.jobDetails,
+            builder: (context, state) {
+              final job = state.extra as Job;
+              return JobDetailsScreen(job: job);
+            },
           )
         ],
       );

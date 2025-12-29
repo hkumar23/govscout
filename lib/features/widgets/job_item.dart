@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../constants/app_colors.dart';
+import '../../constants/app_routes.dart';
 import '../../data/models/job.model.dart';
 import '../../logic/blocs/job_management/job_management_bloc.dart';
 import '../../logic/blocs/job_management/job_management_event.dart';
@@ -29,7 +31,12 @@ class _JobItemState extends State<JobItem> {
     final appColors = AppColors(context);
 
     return InkWell(
-      onTap: () {},
+      onTap: () {
+        GoRouter.of(context).push(
+          extra: widget.job,
+          AppRoutes.jobDetails,
+        );
+      },
       borderRadius: BorderRadius.circular(16),
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),

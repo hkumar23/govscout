@@ -80,4 +80,5 @@ abstract class AppConstants {
   static const additionalData = "additionalData";
   static const note = "note";
   static const howToApply = "howToApply";
+  static const job = "job";
 }

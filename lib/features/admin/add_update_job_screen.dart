@@ -31,7 +31,7 @@ class _AddUpdateJobScreenState extends State<AddUpdateJobScreen> {
 
   final titleCtrl = TextEditingController();
   final departmentCtrl = TextEditingController();
-  final organizationCtrl = TextEditingController();
+  final organisationCtrl = TextEditingController();
   final categoryCtrl = TextEditingController();
   final descriptionCtrl = TextEditingController();
   final vacancyCtrl = TextEditingController();
@@ -85,7 +85,7 @@ class _AddUpdateJobScreenState extends State<AddUpdateJobScreen> {
     final job = Job(
         title: titleCtrl.text.trim(),
         department: departmentCtrl.text.trim(),
-        organization: organizationCtrl.text.trim(),
+        organization: organisationCtrl.text.trim(),
         description: descriptionCtrl.text.trim(),
         category: categoryCtrl.text.trim(),
         vacancies: int.parse(vacancyCtrl.text),
@@ -150,7 +150,7 @@ class _AddUpdateJobScreenState extends State<AddUpdateJobScreen> {
     if (widget.job != null) {
       titleCtrl.text = widget.job!.title;
       departmentCtrl.text = widget.job!.department;
-      organizationCtrl.text = widget.job!.organization;
+      organisationCtrl.text = widget.job!.organization;
       categoryCtrl.text = widget.job!.category;
       descriptionCtrl.text = widget.job!.description;
       vacancyCtrl.text = widget.job!.vacancies.toString();
@@ -290,7 +290,8 @@ class _AddUpdateJobScreenState extends State<AddUpdateJobScreen> {
                           Expanded(
                             child: AppTextFormField(
                               controller: departmentCtrl,
-                              labelText: AppLanguage.department,
+                              labelText:
+                                  "${AppLanguage.department} (eg: SSC, UPSC, Railways, Bank, PSU)",
                               prefixIcon: Icons.account_tree_outlined,
                               validator: AppValidators.textRequired,
                               bottomPadding: 16,
@@ -299,8 +300,9 @@ class _AddUpdateJobScreenState extends State<AddUpdateJobScreen> {
                           SizedBox(width: 10),
                           Expanded(
                             child: AppTextFormField(
-                              controller: organizationCtrl,
-                              labelText: AppLanguage.organisation,
+                              controller: organisationCtrl,
+                              labelText:
+                                  "${AppLanguage.organisation} (eg: Indian Railways, SBI, DRDO)",
                               prefixIcon: Icons.apartment_outlined,
                               validator: AppValidators.textRequired,
                               bottomPadding: 16,
@@ -321,7 +323,8 @@ class _AddUpdateJobScreenState extends State<AddUpdateJobScreen> {
                           Expanded(
                             child: AppTextFormField(
                               controller: categoryCtrl,
-                              labelText: AppLanguage.category,
+                              labelText:
+                                  "${AppLanguage.category} (eg: Defence, Banking, Teaching, Medical)",
                               prefixIcon: Icons.category_outlined,
                               validator: AppValidators.textRequired,
                               bottomPadding: 16,
