@@ -114,9 +114,15 @@ class _AddUpdateJobScreenState extends State<AddUpdateJobScreen> {
         applicationEndDate: endDate!,
         examDate: examDate,
         resultDate: resultDate,
-        applicationFeeGeneral: int.parse(applicationFeeGeneralCtrl.text),
-        applicationFeeObc: int.parse(applicationFeeObcCtrl.text),
-        applicationFeeScSt: int.parse(applicationFeeScStCtrl.text),
+        applicationFeeGeneral: applicationFeeGeneralCtrl.text.isEmpty
+            ? null
+            : int.parse(applicationFeeGeneralCtrl.text),
+        applicationFeeObc: applicationFeeObcCtrl.text.isEmpty
+            ? null
+            : int.parse(applicationFeeObcCtrl.text),
+        applicationFeeScSt: applicationFeeScStCtrl.text.isEmpty
+            ? null
+            : int.parse(applicationFeeScStCtrl.text),
         postedByAdminId: AuthRepository().currentUser!.uid,
         verified: isActive,
         isActive: isActive,
@@ -149,10 +155,15 @@ class _AddUpdateJobScreenState extends State<AddUpdateJobScreen> {
       descriptionCtrl.text = widget.job!.description;
       vacancyCtrl.text = widget.job!.vacancies.toString();
       payLevelCtrl.text = widget.job!.payLevel;
-      applicationFeeGeneralCtrl.text =
-          widget.job!.applicationFeeGeneral.toString();
-      applicationFeeObcCtrl.text = widget.job!.applicationFeeObc.toString();
-      applicationFeeScStCtrl.text = widget.job!.applicationFeeScSt.toString();
+      applicationFeeGeneralCtrl.text = widget.job!.applicationFeeGeneral == null
+          ? ""
+          : widget.job!.applicationFeeGeneral.toString();
+      applicationFeeObcCtrl.text = widget.job!.applicationFeeObc == null
+          ? ""
+          : widget.job!.applicationFeeObc.toString();
+      applicationFeeScStCtrl.text = widget.job!.applicationFeeScSt == null
+          ? ""
+          : widget.job!.applicationFeeScSt.toString();
       officialNotifCtrl.text = widget.job!.officialNotificationUrl;
       startDateCtrl.text =
           DateFormat("dd MMM yyyy").format(widget.job!.applicationStartDate);
@@ -678,7 +689,7 @@ class _AddUpdateJobScreenState extends State<AddUpdateJobScreen> {
                               labelText: "General",
                               keyboardType: TextInputType.number,
                               prefixIcon: Icons.currency_rupee,
-                              validator: AppValidators.doubleTypeRequired,
+                              validator: AppValidators.doubleType,
                             ),
                           ),
                           SizedBox(width: 10),
@@ -688,7 +699,7 @@ class _AddUpdateJobScreenState extends State<AddUpdateJobScreen> {
                               labelText: "OBC",
                               keyboardType: TextInputType.number,
                               prefixIcon: Icons.currency_rupee,
-                              validator: AppValidators.doubleTypeRequired,
+                              validator: AppValidators.doubleType,
                             ),
                           ),
                         ],
@@ -699,7 +710,7 @@ class _AddUpdateJobScreenState extends State<AddUpdateJobScreen> {
                         labelText: "SC/ST",
                         keyboardType: TextInputType.number,
                         prefixIcon: Icons.currency_rupee,
-                        validator: AppValidators.doubleTypeRequired,
+                        validator: AppValidators.doubleType,
                         bottomPadding: 16,
                       ),
                       helper.buildSectionTitle("Other Information"),
