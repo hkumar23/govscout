@@ -56,9 +56,9 @@ class Job {
   final String officialNotificationUrl;
   final String? advtNumber;
 
-  final int applicationFeeGeneral;
-  final int applicationFeeObc;
-  final int applicationFeeScSt;
+  final int? applicationFeeGeneral;
+  final int? applicationFeeObc;
+  final int? applicationFeeScSt;
 
   final List<String> tags; // “Diploma”, “Female”, “Delhi”, “2025”
   final List<String> keywords;
@@ -107,9 +107,9 @@ class Job {
     this.applicationLink,
     required this.officialNotificationUrl,
     this.advtNumber,
-    required this.applicationFeeGeneral,
-    required this.applicationFeeObc,
-    required this.applicationFeeScSt,
+    this.applicationFeeGeneral,
+    this.applicationFeeObc,
+    this.applicationFeeScSt,
     this.tags = const [],
     this.keywords = const [],
     this.savedByUserIds = const [],
