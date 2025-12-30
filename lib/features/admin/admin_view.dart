@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../constants/app_language.dart';
 import '../../widgets/custom_bottom_nav_bar.dart';
+import '../candidate/jobs_feed_screen.dart';
 import 'admin_dashboard_screen.dart';
 import 'admin_settings_screen.dart';
 
@@ -17,16 +18,19 @@ class _AdminViewState extends State<AdminView> {
 
   final List<Widget> _screens = [
     AdminDashboardScreen(),
+    JobsFeedScreen(isAdminView: true),
     AdminSettingsScreen(),
   ];
 
   final icons = [
     Icons.dashboard_rounded,
+    Icons.work_rounded,
     Icons.settings,
   ];
 
   final labels = const [
     AppLanguage.dashboard,
+    AppLanguage.manageJobs,
     AppLanguage.settings,
   ];
 
@@ -35,6 +39,12 @@ class _AdminViewState extends State<AdminView> {
       case 0:
         return AppBar(
           title: Text(AppLanguage.dashboard),
+          scrolledUnderElevation: 0,
+          centerTitle: true,
+        );
+      case 1:
+        return AppBar(
+          title: Text(AppLanguage.jobs),
           scrolledUnderElevation: 0,
           centerTitle: true,
         );

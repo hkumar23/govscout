@@ -30,4 +30,5 @@ abstract class AppLanguage {
   static const active = "Active";
   static const inactive = "Inactive";
   static const update = "Update";
+  static const manageJobs = "Manage Jobs";
 }
