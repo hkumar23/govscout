@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../data/models/job.model.dart';
 
@@ -57,10 +58,6 @@ class JobDetailsScreen extends StatelessWidget {
               _sectionTitle("Application Fees"),
               _buildFees(),
             ],
-            if (job.tags.isNotEmpty) ...[
-              _sectionTitle("Tags"),
-              _buildTags(),
-            ],
             const SizedBox(height: 80),
           ],
         ),
@@ -93,7 +90,7 @@ class JobDetailsScreen extends StatelessWidget {
           children: [
             _chip(job.category),
             _chip(job.department),
-            if (job.location != null) _chip(job.location!),
+            if (job.location?.isNotEmpty ?? false) _chip(job.location!),
           ],
         ),
       ],
@@ -108,6 +105,10 @@ class JobDetailsScreen extends StatelessWidget {
       _infoRow("Job Type", job.jobType.name.toUpperCase()),
       _infoRow("Work Mode", job.workMode.name.toUpperCase()),
       _infoRow("Pay Level", job.payLevel),
+      Chip(
+        label: Text("Female Only"),
+        color: WidgetStatePropertyAll<Color>(Colors.blue.withAlpha(50)),
+      ),
     ]);
   }
 
@@ -185,8 +186,18 @@ class JobDetailsScreen extends StatelessWidget {
         "Application Mode",
         job.applicationMode.name.toUpperCase(),
       ),
-      if (job.applicationLink != null) _infoRow("Apply Link", "Available"),
-      _infoRow("Notification", "Official PDF"),
+      // if (job.applicationLink != null) _infoRow("Apply Link", "Available"),
+      _infoRow(
+        "Notification",
+        "View Official Notification",
+        onTap: () async {
+          final notificationUrl = Uri.parse(job.officialNotificationUrl);
+          launchUrl(
+            notificationUrl,
+            mode: LaunchMode.inAppBrowserView,
+          );
+        },
+      ),
       if (job.advtNumber != null) _infoRow("Advt No.", job.advtNumber!),
     ]);
   }
@@ -208,16 +219,6 @@ class JobDetailsScreen extends StatelessWidget {
     return job.applicationFeeGeneral != null ||
         job.applicationFeeObc != null ||
         job.applicationFeeScSt != null;
-  }
-
-  // ================= TAGS =================
-
-  Widget _buildTags() {
-    return Wrap(
-      spacing: 8,
-      runSpacing: 8,
-      children: job.tags.map(_chip).toList(),
-    );
   }
 
   // ================= BOTTOM BAR =================
@@ -263,12 +264,19 @@ class JobDetailsScreen extends StatelessWidget {
       margin: const EdgeInsets.only(top: 8),
       child: Padding(
         padding: const EdgeInsets.all(12),
-        child: Column(children: children),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: children,
+        ),
       ),
     );
   }
 
-  Widget _infoRow(String label, String value) {
+  Widget _infoRow(
+    String label,
+    String value, {
+    VoidCallback? onTap,
+  }) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6),
       child: Row(
@@ -282,9 +290,15 @@ class JobDetailsScreen extends StatelessWidget {
           ),
           Expanded(
             flex: 6,
-            child: Text(
-              value,
-              style: const TextStyle(fontWeight: FontWeight.w600),
+            child: InkWell(
+              onTap: onTap,
+              child: Text(
+                value,
+                style: TextStyle(
+                  fontWeight: FontWeight.w600,
+                  color: onTap == null ? null : Colors.blueAccent,
+                ),
+              ),
             ),
           ),
         ],

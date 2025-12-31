@@ -130,13 +130,16 @@ class _JobItemState extends State<JobItem> {
               runSpacing: 6,
               children: [
                 _infoChip(Icons.category, widget.job.category),
-                _infoChip(Icons.location_on, widget.job.location ?? "N/A"),
+                if (widget.job.location?.isNotEmpty ?? false)
+                  _infoChip(Icons.location_on, widget.job.location ?? "N/A"),
                 if (widget.job.salaryMin != null ||
                     widget.job.salaryMax != null)
                   _infoChip(
                     Icons.currency_rupee,
                     "${widget.job.salaryMin ?? 'N/A'} - ${widget.job.salaryMax ?? 'N/A'}",
                   ),
+                if (widget.job.femaleOnly)
+                  _infoChip(Icons.female, "Female Only")
               ],
             ),
 
