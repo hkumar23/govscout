@@ -28,6 +28,24 @@ class _JobDetailsScreenState extends State<JobDetailsScreen> {
     bool isJobSaved = widget.job.savedByUserIds.contains(currentUserId);
 
     return Scaffold(
+      floatingActionButton: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: theme.colorScheme.primary,
+          foregroundColor: theme.colorScheme.surface,
+          textStyle: theme.textTheme.bodyLarge!.copyWith(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        onPressed: () {
+          if (widget.job.applicationLink == null) return;
+          final notificationUrl = Uri.parse(widget.job.applicationLink!);
+          launchUrl(
+            notificationUrl,
+            mode: LaunchMode.inAppBrowserView,
+          );
+        },
+        child: const Text("Apply Now"),
+      ),
       appBar: AppBar(
         title: const Text("Job Details"),
         actions: [
@@ -67,7 +85,6 @@ class _JobDetailsScreenState extends State<JobDetailsScreen> {
           // ),
         ],
       ),
-      bottomNavigationBar: _buildBottomBar(context),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -247,21 +264,6 @@ class _JobDetailsScreenState extends State<JobDetailsScreen> {
     return widget.job.applicationFeeGeneral != null ||
         widget.job.applicationFeeObc != null ||
         widget.job.applicationFeeScSt != null;
-  }
-
-  // ================= BOTTOM BAR =================
-  Widget _buildBottomBar(BuildContext context) {
-    return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.all(12),
-        child: ElevatedButton(
-          onPressed: () {
-            // TODO: Open applicationLink or officialNotificationUrl
-          },
-          child: const Text("Apply Now"),
-        ),
-      ),
-    );
   }
 
   // ================= HELPERS =================
