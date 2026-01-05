@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:govscout/logic/blocs/job_management/job_management_event.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../data/models/job.model.dart';
+import '../data/repositories/auth_repo.dart';
+import '../logic/blocs/job_management/job_management_bloc.dart';
 
-class JobDetailsScreen extends StatelessWidget {
+class JobDetailsScreen extends StatefulWidget {
   final Job job;
 
   const JobDetailsScreen({
@@ -13,25 +17,54 @@ class JobDetailsScreen extends StatelessWidget {
   });
 
   @override
+  State<JobDetailsScreen> createState() => _JobDetailsScreenState();
+}
+
+class _JobDetailsScreenState extends State<JobDetailsScreen> {
+  @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final currentUserId = AuthRepository().currentUser!.uid;
+    bool isJobSaved = widget.job.savedByUserIds.contains(currentUserId);
 
     return Scaffold(
       appBar: AppBar(
         title: const Text("Job Details"),
         actions: [
           IconButton(
-            icon: const Icon(Icons.bookmark_border),
+            icon: Icon(isJobSaved ? Icons.bookmark : Icons.bookmark_border),
             onPressed: () {
-              // TODO: Save Job
+              if (isJobSaved) {
+                setState(() {
+                  widget.job.savedByUserIds.remove(currentUserId);
+                });
+
+                BlocProvider.of<JobManagementBloc>(context).add(
+                  UnsaveJobEvent(
+                    widget.job.id!,
+                    currentUserId,
+                  ),
+                );
+              } else {
+                setState(() {
+                  widget.job.savedByUserIds.add(currentUserId);
+                });
+                BlocProvider.of<JobManagementBloc>(context).add(
+                  SaveJobEvent(
+                    widget.job.id!,
+                    currentUserId,
+                  ),
+                );
+              }
             },
           ),
-          IconButton(
-            icon: const Icon(Icons.share),
-            onPressed: () {
-              // TODO: Share Job
-            },
-          ),
+
+          // IconButton(
+          //   icon: const Icon(Icons.share),
+          //   onPressed: () {
+          //     // TODO: Share Job
+          //   },
+          // ),
         ],
       ),
       bottomNavigationBar: _buildBottomBar(context),
@@ -43,7 +76,7 @@ class JobDetailsScreen extends StatelessWidget {
             _buildHeader(theme),
             const SizedBox(height: 16),
             _sectionTitle("Job Description"),
-            _sectionText(job.description),
+            _sectionText(widget.job.description),
             _sectionTitle("Job Overview"),
             _buildOverview(),
             _sectionTitle("Important Dates"),
@@ -66,20 +99,19 @@ class JobDetailsScreen extends StatelessWidget {
   }
 
   // ================= HEADER =================
-
   Widget _buildHeader(ThemeData theme) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          job.title,
+          widget.job.title,
           style: theme.textTheme.titleLarge?.copyWith(
             fontWeight: FontWeight.bold,
           ),
         ),
         const SizedBox(height: 6),
         Text(
-          job.organization,
+          widget.job.organization,
           style: theme.textTheme.bodyMedium?.copyWith(
             color: Colors.grey[600],
           ),
@@ -88,9 +120,10 @@ class JobDetailsScreen extends StatelessWidget {
         Wrap(
           spacing: 8,
           children: [
-            _chip(job.category),
-            _chip(job.department),
-            if (job.location?.isNotEmpty ?? false) _chip(job.location!),
+            _chip(widget.job.category),
+            _chip(widget.job.department),
+            if (widget.job.location?.isNotEmpty ?? false)
+              _chip(widget.job.location!),
           ],
         ),
       ],
@@ -98,13 +131,12 @@ class JobDetailsScreen extends StatelessWidget {
   }
 
   // ================= OVERVIEW =================
-
   Widget _buildOverview() {
     return _infoCard([
-      _infoRow("Vacancies", job.vacancies.toString()),
-      _infoRow("Job Type", job.jobType.name.toUpperCase()),
-      _infoRow("Work Mode", job.workMode.name.toUpperCase()),
-      _infoRow("Pay Level", job.payLevel),
+      _infoRow("Vacancies", widget.job.vacancies.toString()),
+      _infoRow("Job Type", widget.job.jobType.name.toUpperCase()),
+      _infoRow("Work Mode", widget.job.workMode.name.toUpperCase()),
+      _infoRow("Pay Level", widget.job.payLevel),
       Chip(
         label: Text("Female Only"),
         color: WidgetStatePropertyAll<Color>(Colors.blue.withAlpha(50)),
@@ -113,116 +145,111 @@ class JobDetailsScreen extends StatelessWidget {
   }
 
   // ================= DATES =================
-
   Widget _buildDates() {
     return _infoCard([
       _infoRow(
         "Application Start",
-        _formatDate(job.applicationStartDate),
+        _formatDate(widget.job.applicationStartDate),
       ),
       _infoRow(
         "Application End",
-        _formatDate(job.applicationEndDate),
+        _formatDate(widget.job.applicationEndDate),
       ),
-      if (job.examDate != null)
-        _infoRow("Exam Date", _formatDate(job.examDate!)),
-      if (job.resultDate != null)
-        _infoRow("Result Date", _formatDate(job.resultDate!)),
+      if (widget.job.examDate != null)
+        _infoRow("Exam Date", _formatDate(widget.job.examDate!)),
+      if (widget.job.resultDate != null)
+        _infoRow("Result Date", _formatDate(widget.job.resultDate!)),
     ]);
   }
 
   // ================= SALARY =================
-
   Widget _buildSalary() {
     String salaryText = "Not Disclosed";
 
-    if (job.salaryMin != null || job.salaryMax != null) {
+    if (widget.job.salaryMin != null || widget.job.salaryMax != null) {
       salaryText =
-          "₹${job.salaryMin ?? 0} - ₹${job.salaryMax ?? "As per rules"}";
+          "₹${widget.job.salaryMin ?? 0} - ₹${widget.job.salaryMax ?? "As per rules"}";
     }
 
     return _infoCard([
       _infoRow("Salary", salaryText),
-      _infoRow("Pay Level", job.payLevel),
+      _infoRow("Pay Level", widget.job.payLevel),
     ]);
   }
 
   // ================= ELIGIBILITY =================
-
   Widget _buildEligibility() {
     return _infoCard([
-      if (job.minAge != null)
+      if (widget.job.minAge != null)
         _infoRow(
           "Age Limit",
-          "${job.minAge} - ${job.maxAge ?? "As per rules"}",
+          "${widget.job.minAge} - ${widget.job.maxAge ?? "As per rules"}",
         ),
       _infoRow(
         "Age Relaxation",
-        job.ageRelaxationAllowed == true ? "Yes" : "No",
+        widget.job.ageRelaxationAllowed == true ? "Yes" : "No",
       ),
-      if (job.qualificationRequired.isNotEmpty)
+      if (widget.job.qualificationRequired.isNotEmpty)
         _infoRow(
           "Qualification",
-          job.qualificationRequired.join(", "),
+          widget.job.qualificationRequired.join(", "),
         ),
-      if (job.fieldOfStudyRequired.isNotEmpty)
+      if (widget.job.fieldOfStudyRequired.isNotEmpty)
         _infoRow(
           "Field",
-          job.fieldOfStudyRequired.join(", "),
+          widget.job.fieldOfStudyRequired.join(", "),
         ),
-      if (job.experienceRequired == true)
+      if (widget.job.experienceRequired == true)
         _infoRow(
           "Experience",
-          "${job.minExperienceYears ?? 0} Years",
+          "${widget.job.minExperienceYears ?? 0} Years",
         ),
     ]);
   }
 
   // ================= APPLICATION =================
-
   Widget _buildApplicationDetails() {
     return _infoCard([
       _infoRow(
         "Application Mode",
-        job.applicationMode.name.toUpperCase(),
+        widget.job.applicationMode.name.toUpperCase(),
       ),
       // if (job.applicationLink != null) _infoRow("Apply Link", "Available"),
       _infoRow(
         "Notification",
         "View Official Notification",
         onTap: () async {
-          final notificationUrl = Uri.parse(job.officialNotificationUrl);
+          final notificationUrl = Uri.parse(widget.job.officialNotificationUrl);
           launchUrl(
             notificationUrl,
             mode: LaunchMode.inAppBrowserView,
           );
         },
       ),
-      if (job.advtNumber != null) _infoRow("Advt No.", job.advtNumber!),
+      if (widget.job.advtNumber != null)
+        _infoRow("Advt No.", widget.job.advtNumber!),
     ]);
   }
 
   // ================= FEES =================
-
   Widget _buildFees() {
     return _infoCard([
-      if (job.applicationFeeGeneral != null)
-        _infoRow("General", "₹${job.applicationFeeGeneral}"),
-      if (job.applicationFeeObc != null)
-        _infoRow("OBC", "₹${job.applicationFeeObc}"),
-      if (job.applicationFeeScSt != null)
-        _infoRow("SC/ST", "₹${job.applicationFeeScSt}"),
+      if (widget.job.applicationFeeGeneral != null)
+        _infoRow("General", "₹${widget.job.applicationFeeGeneral}"),
+      if (widget.job.applicationFeeObc != null)
+        _infoRow("OBC", "₹${widget.job.applicationFeeObc}"),
+      if (widget.job.applicationFeeScSt != null)
+        _infoRow("SC/ST", "₹${widget.job.applicationFeeScSt}"),
     ]);
   }
 
   bool _hasFees() {
-    return job.applicationFeeGeneral != null ||
-        job.applicationFeeObc != null ||
-        job.applicationFeeScSt != null;
+    return widget.job.applicationFeeGeneral != null ||
+        widget.job.applicationFeeObc != null ||
+        widget.job.applicationFeeScSt != null;
   }
 
   // ================= BOTTOM BAR =================
-
   Widget _buildBottomBar(BuildContext context) {
     return SafeArea(
       child: Padding(
@@ -238,7 +265,6 @@ class JobDetailsScreen extends StatelessWidget {
   }
 
   // ================= HELPERS =================
-
   Widget _sectionTitle(String title) {
     return Padding(
       padding: const EdgeInsets.only(top: 20, bottom: 8),
