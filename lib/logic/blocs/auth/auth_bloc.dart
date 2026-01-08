@@ -17,6 +17,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final _userRepo = UserRepository();
   final _candidateRepo = CandidateRepository();
   final _firestore = FirebaseFirestore.instance;
+  bool? isAdminView;
 
   AuthBloc() : super(InitialAuthState()) {
     on<AppStartedEvent>(_onAppStartedEvent);
@@ -45,6 +46,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         if (data == null) {
           throw "${userDoc.role} not found in database";
         }
+
+        isAdminView = userDoc.role == AppConstants.admin;
 
         emit(LoggedInState(
           role: userDoc.role,

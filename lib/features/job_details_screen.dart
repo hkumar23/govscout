@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:govscout/logic/blocs/job_management/job_management_event.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../constants/app_constants.dart';
+import '../constants/app_routes.dart';
 import '../data/models/job.model.dart';
 import '../data/repositories/auth_repo.dart';
+import '../logic/blocs/auth/auth_bloc.dart';
 import '../logic/blocs/job_management/job_management_bloc.dart';
 
 class JobDetailsScreen extends StatefulWidget {
@@ -26,26 +30,9 @@ class _JobDetailsScreenState extends State<JobDetailsScreen> {
     final theme = Theme.of(context);
     final currentUserId = AuthRepository().currentUser!.uid;
     bool isJobSaved = widget.job.savedByUserIds.contains(currentUserId);
+    bool isAdminView = BlocProvider.of<AuthBloc>(context).isAdminView!;
 
     return Scaffold(
-      floatingActionButton: ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          backgroundColor: theme.colorScheme.primary,
-          foregroundColor: theme.colorScheme.surface,
-          textStyle: theme.textTheme.bodyLarge!.copyWith(
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        onPressed: () {
-          if (widget.job.applicationLink == null) return;
-          final notificationUrl = Uri.parse(widget.job.applicationLink!);
-          launchUrl(
-            notificationUrl,
-            mode: LaunchMode.inAppBrowserView,
-          );
-        },
-        child: const Text("Apply Now"),
-      ),
       appBar: AppBar(
         title: const Text("Job Details"),
         actions: [
@@ -85,30 +72,92 @@ class _JobDetailsScreenState extends State<JobDetailsScreen> {
           // ),
         ],
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+      body: SafeArea(
+        child: Stack(
           children: [
-            _buildHeader(theme),
-            const SizedBox(height: 16),
-            _sectionTitle("Job Description"),
-            _sectionText(widget.job.description),
-            _sectionTitle("Job Overview"),
-            _buildOverview(),
-            _sectionTitle("Important Dates"),
-            _buildDates(),
-            _sectionTitle("Salary & Pay"),
-            _buildSalary(),
-            _sectionTitle("Eligibility"),
-            _buildEligibility(),
-            _sectionTitle("Application Details"),
-            _buildApplicationDetails(),
-            if (_hasFees()) ...[
-              _sectionTitle("Application Fees"),
-              _buildFees(),
-            ],
-            const SizedBox(height: 80),
+            SingleChildScrollView(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildHeader(theme),
+                  const SizedBox(height: 16),
+                  _sectionTitle("Job Description"),
+                  _sectionText(widget.job.description),
+                  _sectionTitle("Job Overview"),
+                  _buildOverview(),
+                  _sectionTitle("Important Dates"),
+                  _buildDates(),
+                  _sectionTitle("Salary & Pay"),
+                  _buildSalary(),
+                  _sectionTitle("Eligibility"),
+                  _buildEligibility(),
+                  _sectionTitle("Application Details"),
+                  _buildApplicationDetails(),
+                  if (_hasFees()) ...[
+                    _sectionTitle("Application Fees"),
+                    _buildFees(),
+                  ],
+                  if (_hasOtherDetails()) ...[
+                    _sectionTitle("Other Details"),
+                    _buildOtherDetails()
+                  ],
+                  const SizedBox(height: 100),
+                ],
+              ),
+            ),
+            Align(
+              alignment:
+                  isAdminView ? Alignment.bottomCenter : Alignment.bottomRight,
+              child: Padding(
+                padding: EdgeInsets.all(8),
+                child: Row(
+                  mainAxisAlignment: isAdminView
+                      ? MainAxisAlignment.spaceBetween
+                      : MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    if (isAdminView)
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: theme.colorScheme.secondaryContainer,
+                          foregroundColor:
+                              theme.colorScheme.onSecondaryContainer,
+                          textStyle: theme.textTheme.bodyLarge!.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        onPressed: () {
+                          GoRouter.of(context).push(
+                            extra: widget.job,
+                            AppRoutes.addUpdateJob,
+                          );
+                        },
+                        child: const Text("Edit Job"),
+                      ),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: theme.colorScheme.primary,
+                        foregroundColor: theme.colorScheme.surface,
+                        textStyle: theme.textTheme.bodyLarge!.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      onPressed: () {
+                        if (widget.job.applicationLink == null) return;
+                        final notificationUrl =
+                            Uri.parse(widget.job.applicationLink!);
+                        launchUrl(
+                          notificationUrl,
+                          mode: LaunchMode.inAppBrowserView,
+                        );
+                      },
+                      child: const Text("Apply Now"),
+                    ),
+                  ],
+                ),
+              ),
+            ),
           ],
         ),
       ),
@@ -260,10 +309,27 @@ class _JobDetailsScreenState extends State<JobDetailsScreen> {
     ]);
   }
 
+  Widget _buildOtherDetails() {
+    return _infoCard([
+      if (widget.job.additionalData?[AppConstants.howToApply]?.isNotEmpty ??
+          false)
+        _infoRow("How to Apply?",
+            widget.job.additionalData![AppConstants.howToApply]),
+      if (widget.job.additionalData?[AppConstants.note]?.isNotEmpty ?? false)
+        _infoRow("Note", widget.job.additionalData![AppConstants.note])
+    ]);
+  }
+
   bool _hasFees() {
     return widget.job.applicationFeeGeneral != null ||
         widget.job.applicationFeeObc != null ||
         widget.job.applicationFeeScSt != null;
+  }
+
+  bool _hasOtherDetails() {
+    return (widget.job.additionalData?[AppConstants.howToApply]?.isNotEmpty ??
+            false) ||
+        (widget.job.additionalData?[AppConstants.note]?.isNotEmpty ?? false);
   }
 
   // ================= HELPERS =================
@@ -308,6 +374,7 @@ class _JobDetailsScreenState extends State<JobDetailsScreen> {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Expanded(
             flex: 4,

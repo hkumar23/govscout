@@ -356,7 +356,7 @@ class _AddUpdateJobScreenState extends State<AddUpdateJobScreen> {
                         children: [
                           Expanded(
                             child: AppDropdownButtonFormField(
-                              value: null,
+                              value: selectedJobType.name.toLowerCase(),
                               items: JobType.values.map((v) => v.name).toList(),
                               labelText: "Job Type",
                               prefixIcon: Icons.badge_outlined,
@@ -373,7 +373,7 @@ class _AddUpdateJobScreenState extends State<AddUpdateJobScreen> {
                           SizedBox(width: 10),
                           Expanded(
                             child: AppDropdownButtonFormField(
-                              value: null,
+                              value: selectedWorkMode.name.toLowerCase(),
                               items: WorkMode.values
                                   .map((jobType) => jobType.name)
                                   .toList(),
@@ -535,7 +535,7 @@ class _AddUpdateJobScreenState extends State<AddUpdateJobScreen> {
                       ),
                       helper.buildSectionTitle("Application Process"),
                       AppDropdownButtonFormField(
-                        value: null,
+                        value: selectedApplicationMode.name.toLowerCase(),
                         items:
                             ApplicationMode.values.map((v) => v.name).toList(),
                         labelText: "Application Mode",

@@ -32,13 +32,22 @@ class AppRouter {
           ),
           GoRoute(
             path: AppRoutes.addUpdateJob,
-            builder: (_, __) => AddUpdateJobScreen(),
+            builder: (context, state) {
+              final job = state.extra as Job?;
+              return AddUpdateJobScreen(job: job);
+            },
           ),
           GoRoute(
             path: AppRoutes.jobDetails,
             builder: (context, state) {
-              final job = state.extra as Job;
-              return JobDetailsScreen(job: job);
+              final data = state.extra as Map<String, dynamic>;
+              final job = data[AppConstants.job];
+              // final isAdminView = data[AppConstants.isAdminView];
+
+              return JobDetailsScreen(
+                job: job,
+                // isAdminView: isAdminView,
+              );
             },
           )
         ],

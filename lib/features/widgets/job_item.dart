@@ -3,8 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../constants/app_colors.dart';
+import '../../constants/app_constants.dart';
 import '../../constants/app_routes.dart';
 import '../../data/models/job.model.dart';
+import '../../logic/blocs/auth/auth_bloc.dart';
 import '../../logic/blocs/job_management/job_management_bloc.dart';
 import '../../logic/blocs/job_management/job_management_event.dart';
 
@@ -33,7 +35,11 @@ class _JobItemState extends State<JobItem> {
     return InkWell(
       onTap: () {
         GoRouter.of(context).push(
-          extra: widget.job,
+          extra: {
+            AppConstants.job: widget.job,
+            // AppConstants.isAdminView:
+            //     BlocProvider.of<AuthBloc>(context).isAdminView,
+          },
           AppRoutes.jobDetails,
         );
       },
