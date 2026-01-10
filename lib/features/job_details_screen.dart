@@ -106,58 +106,63 @@ class _JobDetailsScreenState extends State<JobDetailsScreen> {
                 ],
               ),
             ),
-            Align(
-              alignment:
-                  isAdminView ? Alignment.bottomCenter : Alignment.bottomRight,
-              child: Padding(
-                padding: EdgeInsets.all(8),
-                child: Row(
-                  mainAxisAlignment: isAdminView
-                      ? MainAxisAlignment.spaceBetween
-                      : MainAxisAlignment.end,
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    if (isAdminView)
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: theme.colorScheme.secondaryContainer,
-                          foregroundColor:
-                              theme.colorScheme.onSecondaryContainer,
-                          textStyle: theme.textTheme.bodyLarge!.copyWith(
-                            fontWeight: FontWeight.bold,
+            if (!isAdminView &&
+                (widget.job.applicationLink?.isNotEmpty ?? false))
+              Align(
+                alignment: isAdminView
+                    ? Alignment.bottomCenter
+                    : Alignment.bottomRight,
+                child: Padding(
+                  padding: EdgeInsets.all(8),
+                  child: Row(
+                    mainAxisAlignment: isAdminView
+                        ? MainAxisAlignment.spaceBetween
+                        : MainAxisAlignment.end,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      if (isAdminView)
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor:
+                                theme.colorScheme.secondaryContainer,
+                            foregroundColor:
+                                theme.colorScheme.onSecondaryContainer,
+                            textStyle: theme.textTheme.bodyLarge!.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
+                          onPressed: () {
+                            GoRouter.of(context).push(
+                              extra: widget.job,
+                              AppRoutes.addUpdateJob,
+                            );
+                          },
+                          child: const Text("Edit Job"),
                         ),
-                        onPressed: () {
-                          GoRouter.of(context).push(
-                            extra: widget.job,
-                            AppRoutes.addUpdateJob,
-                          );
-                        },
-                        child: const Text("Edit Job"),
-                      ),
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: theme.colorScheme.primary,
-                        foregroundColor: theme.colorScheme.surface,
-                        textStyle: theme.textTheme.bodyLarge!.copyWith(
-                          fontWeight: FontWeight.bold,
+                      if (widget.job.applicationLink?.isNotEmpty ?? false)
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: theme.colorScheme.primary,
+                            foregroundColor: theme.colorScheme.surface,
+                            textStyle: theme.textTheme.bodyLarge!.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          onPressed: () {
+                            if (widget.job.applicationLink == null) return;
+                            final notificationUrl =
+                                Uri.parse(widget.job.applicationLink!);
+                            launchUrl(
+                              notificationUrl,
+                              mode: LaunchMode.inAppBrowserView,
+                            );
+                          },
+                          child: const Text("Apply Now"),
                         ),
-                      ),
-                      onPressed: () {
-                        if (widget.job.applicationLink == null) return;
-                        final notificationUrl =
-                            Uri.parse(widget.job.applicationLink!);
-                        launchUrl(
-                          notificationUrl,
-                          mode: LaunchMode.inAppBrowserView,
-                        );
-                      },
-                      child: const Text("Apply Now"),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
-            ),
           ],
         ),
       ),

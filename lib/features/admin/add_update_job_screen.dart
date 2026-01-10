@@ -554,7 +554,6 @@ class _AddUpdateJobScreenState extends State<AddUpdateJobScreen> {
                         labelText: "Application Link",
                         prefixIcon: Icons.link,
                         bottomPadding: 16,
-                        validator: AppValidators.textRequired,
                       ),
                       AppTextFormField(
                         controller: officialNotifCtrl,
