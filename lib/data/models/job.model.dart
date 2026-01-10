@@ -54,6 +54,7 @@ class Job {
   final ApplicationMode applicationMode; // Online / Offline
   final String? applicationLink;
   final String officialNotificationUrl;
+  final String? officialWebsiteLink;
   final String? advtNumber;
 
   final int? applicationFeeGeneral;
@@ -106,6 +107,7 @@ class Job {
     required this.applicationMode,
     this.applicationLink,
     required this.officialNotificationUrl,
+    this.officialWebsiteLink,
     this.advtNumber,
     this.applicationFeeGeneral,
     this.applicationFeeObc,
@@ -171,6 +173,7 @@ class Job {
       ),
       applicationLink: json[AppConstants.applicationLink],
       officialNotificationUrl: json[AppConstants.officialNotificationUrl] ?? '',
+      officialWebsiteLink: json[AppConstants.officialWebsiteLink],
       advtNumber: json[AppConstants.advtNumber],
       applicationFeeGeneral: json[AppConstants.applicationFeeGeneral],
       applicationFeeObc: json[AppConstants.applicationFeeObc],
@@ -225,6 +228,7 @@ class Job {
       AppConstants.applicationMode: applicationMode.name,
       AppConstants.applicationLink: applicationLink,
       AppConstants.officialNotificationUrl: officialNotificationUrl,
+      AppConstants.officialWebsiteLink: officialWebsiteLink,
       AppConstants.advtNumber: advtNumber,
       AppConstants.applicationFeeGeneral: applicationFeeGeneral,
       AppConstants.applicationFeeObc: applicationFeeObc,

@@ -82,4 +82,5 @@ abstract class AppConstants {
   static const howToApply = "howToApply";
   static const job = "job";
   static const isAdminView = "isAdminView";
+  static const officialWebsiteLink = "officialWebsiteLink";
 }

@@ -51,6 +51,7 @@ class _AddUpdateJobScreenState extends State<AddUpdateJobScreen> {
   final examDateCtrl = TextEditingController();
   final resultDateCtrl = TextEditingController();
   final applicationLinkCtrl = TextEditingController();
+  final officialWebsiteLinkCtrl = TextEditingController();
   final advtNumberCtrl = TextEditingController();
   final noteCtrl = TextEditingController();
   final howToApplyCtrl = TextEditingController();
@@ -110,6 +111,7 @@ class _AddUpdateJobScreenState extends State<AddUpdateJobScreen> {
         applicationLink: applicationLinkCtrl.text.trim(),
         officialNotificationUrl: officialNotifCtrl.text.trim(),
         advtNumber: advtNumberCtrl.text.trim(),
+        officialWebsiteLink: officialWebsiteLinkCtrl.text.trim(),
         applicationStartDate: startDate!,
         applicationEndDate: endDate!,
         examDate: examDate,
@@ -182,6 +184,7 @@ class _AddUpdateJobScreenState extends State<AddUpdateJobScreen> {
           ? DateFormat("dd MMM yyyy").format(widget.job!.resultDate!)
           : "";
       applicationLinkCtrl.text = widget.job!.applicationLink ?? "";
+      officialWebsiteLinkCtrl.text = widget.job!.officialWebsiteLink ?? "";
       advtNumberCtrl.text = widget.job!.advtNumber ?? "";
 
       selectedJobType = widget.job!.jobType;
@@ -342,6 +345,12 @@ class _AddUpdateJobScreenState extends State<AddUpdateJobScreen> {
                             ),
                           ),
                         ],
+                      ),
+                      AppTextFormField(
+                        controller: officialWebsiteLinkCtrl,
+                        labelText: AppLanguage.officialWebsiteLink,
+                        prefixIcon: Icons.web,
+                        bottomPadding: 16,
                       ),
                       ChipInputWidget(
                         title: "Tags",
