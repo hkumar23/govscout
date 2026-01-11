@@ -46,8 +46,8 @@ class Job {
   final bool? experienceRequired;
   final int? minExperienceYears;
 
-  final DateTime applicationStartDate;
-  final DateTime applicationEndDate;
+  final DateTime? applicationStartDate;
+  final DateTime? applicationEndDate;
   final DateTime? examDate;
   final DateTime? resultDate;
 
@@ -100,8 +100,8 @@ class Job {
     this.fieldOfStudyRequired = const [],
     this.experienceRequired,
     this.minExperienceYears,
-    required this.applicationStartDate,
-    required this.applicationEndDate,
+    this.applicationStartDate,
+    this.applicationEndDate,
     this.examDate,
     this.resultDate,
     required this.applicationMode,
@@ -157,10 +157,12 @@ class Job {
           List<String>.from(json[AppConstants.fieldOfStudyRequired] ?? []),
       experienceRequired: json[AppConstants.experienceRequired],
       minExperienceYears: json[AppConstants.minExperienceYears],
-      applicationStartDate:
-          (json[AppConstants.applicationStartDate] as Timestamp).toDate(),
-      applicationEndDate:
-          (json[AppConstants.applicationEndDate] as Timestamp).toDate(),
+      applicationStartDate: json[AppConstants.applicationStartDate] != null
+          ? (json[AppConstants.applicationStartDate] as Timestamp).toDate()
+          : null,
+      applicationEndDate: json[AppConstants.applicationEndDate] != null
+          ? (json[AppConstants.applicationEndDate] as Timestamp).toDate()
+          : null,
       examDate: json[AppConstants.examDate] != null
           ? (json[AppConstants.examDate] as Timestamp).toDate()
           : null,
@@ -218,9 +220,12 @@ class Job {
       AppConstants.fieldOfStudyRequired: fieldOfStudyRequired,
       AppConstants.experienceRequired: experienceRequired,
       AppConstants.minExperienceYears: minExperienceYears,
-      AppConstants.applicationStartDate:
-          Timestamp.fromDate(applicationStartDate),
-      AppConstants.applicationEndDate: Timestamp.fromDate(applicationEndDate),
+      AppConstants.applicationStartDate: applicationStartDate != null
+          ? Timestamp.fromDate(applicationStartDate!)
+          : null,
+      AppConstants.applicationEndDate: applicationEndDate != null
+          ? Timestamp.fromDate(applicationEndDate!)
+          : null,
       AppConstants.examDate:
           examDate != null ? Timestamp.fromDate(examDate!) : null,
       AppConstants.resultDate:

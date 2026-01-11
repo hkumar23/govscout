@@ -167,10 +167,12 @@ class _AddUpdateJobScreenState extends State<AddUpdateJobScreen> {
           ? ""
           : widget.job!.applicationFeeScSt.toString();
       officialNotifCtrl.text = widget.job!.officialNotificationUrl;
-      startDateCtrl.text =
-          DateFormat("dd MMM yyyy").format(widget.job!.applicationStartDate);
-      endDateCtrl.text =
-          DateFormat("dd MMM yyyy").format(widget.job!.applicationEndDate);
+      startDateCtrl.text = widget.job!.applicationStartDate == null
+          ? ""
+          : DateFormat("dd MMM yyyy").format(widget.job!.applicationStartDate!);
+      endDateCtrl.text = widget.job!.applicationEndDate == null
+          ? ""
+          : DateFormat("dd MMM yyyy").format(widget.job!.applicationEndDate!);
       jobLocationCtrl.text = widget.job!.location ?? "";
       minSalaryCtrl.text = widget.job!.salaryMin?.toString() ?? "";
       maxSalaryCtrl.text = widget.job!.salaryMax?.toString() ?? "";
@@ -588,7 +590,7 @@ class _AddUpdateJobScreenState extends State<AddUpdateJobScreen> {
                                 readOnly: true, // Makes the field non-editable
                                 labelText: "Application Start Date",
                                 prefixIcon: Icons.play_circle_outline,
-                                validator: AppValidators.textRequired,
+                                // validator: AppValidators.textRequired,
                                 onTap: () async {
                                   final pickedDate = await showDatePicker(
                                     context: context,
@@ -614,7 +616,7 @@ class _AddUpdateJobScreenState extends State<AddUpdateJobScreen> {
                                 readOnly: true, // Makes the field non-editable
                                 labelText: "Application End Date",
                                 prefixIcon: Icons.stop_circle_outlined,
-                                validator: AppValidators.textRequired,
+                                // validator: AppValidators.textRequired,
                                 onTap: () async {
                                   final pickedDate = await showDatePicker(
                                     context: context,

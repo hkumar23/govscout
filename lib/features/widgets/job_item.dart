@@ -149,22 +149,24 @@ class _JobItemState extends State<JobItem> {
               ],
             ),
 
-            const SizedBox(height: 10),
+            if (widget.job.applicationEndDate != null)
+              const SizedBox(height: 10),
 
             /// ─── DEADLINE ───
-            Row(
-              children: [
-                const Icon(Icons.schedule, size: 16, color: Colors.redAccent),
-                const SizedBox(width: 6),
-                Text(
-                  "Last date: ${_formatDate(widget.job.applicationEndDate)}",
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: Colors.redAccent,
-                        fontWeight: FontWeight.w600,
-                      ),
-                ),
-              ],
-            ),
+            if (widget.job.applicationEndDate != null)
+              Row(
+                children: [
+                  const Icon(Icons.schedule, size: 16, color: Colors.redAccent),
+                  const SizedBox(width: 6),
+                  Text(
+                    "Last date: ${_formatDate(widget.job.applicationEndDate!)}",
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: Colors.redAccent,
+                          fontWeight: FontWeight.w600,
+                        ),
+                  ),
+                ],
+              ),
           ],
         ),
       ),

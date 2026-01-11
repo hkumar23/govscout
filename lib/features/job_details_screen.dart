@@ -86,8 +86,10 @@ class _JobDetailsScreenState extends State<JobDetailsScreen> {
                   _sectionText(widget.job.description),
                   _sectionTitle("Job Overview"),
                   _buildOverview(),
-                  _sectionTitle("Important Dates"),
-                  _buildDates(),
+                  if (_hasDates()) ...[
+                    _sectionTitle("Important Dates"),
+                    _buildDates(),
+                  ],
                   _sectionTitle("Salary & Pay"),
                   _buildSalary(),
                   _sectionTitle("Eligibility"),
@@ -218,14 +220,16 @@ class _JobDetailsScreenState extends State<JobDetailsScreen> {
   // ================= DATES =================
   Widget _buildDates() {
     return _infoCard([
-      _infoRow(
-        "Application Start",
-        _formatDate(widget.job.applicationStartDate),
-      ),
-      _infoRow(
-        "Application End",
-        _formatDate(widget.job.applicationEndDate),
-      ),
+      if (widget.job.applicationStartDate != null)
+        _infoRow(
+          "Application Start",
+          _formatDate(widget.job.applicationStartDate!),
+        ),
+      if (widget.job.applicationEndDate != null)
+        _infoRow(
+          "Application End",
+          _formatDate(widget.job.applicationEndDate!),
+        ),
       if (widget.job.examDate != null)
         _infoRow("Exam Date", _formatDate(widget.job.examDate!)),
       if (widget.job.resultDate != null)
@@ -323,6 +327,13 @@ class _JobDetailsScreenState extends State<JobDetailsScreen> {
       if (widget.job.additionalData?[AppConstants.note]?.isNotEmpty ?? false)
         _infoRow("Note", widget.job.additionalData![AppConstants.note])
     ]);
+  }
+
+  bool _hasDates() {
+    return widget.job.applicationStartDate != null ||
+        widget.job.applicationEndDate != null ||
+        widget.job.examDate != null ||
+        widget.job.resultDate != null;
   }
 
   bool _hasFees() {
