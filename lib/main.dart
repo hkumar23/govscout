@@ -15,6 +15,7 @@ import 'router/app_router.dart';
 import 'core/theme/app_theme_mode.dart';
 import '../../../utils/utils_android_stub.dart'
     if (dart.library.io) '../../../utils/utils_android.dart';
+import 'utils/app_methods.dart';
 import 'utils/services/notification_service.dart';
 
 void main() async {
@@ -53,8 +54,27 @@ void main() async {
   ));
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) async {
+    // if (state == AppLifecycleState.resumed || state==AppLifecycleState.) {
+    //   print(state);
+    AppMethods.logUserActivity();
+    // }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
 
   @override
   Widget build(BuildContext context) {

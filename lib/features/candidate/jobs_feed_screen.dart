@@ -211,13 +211,13 @@ class _JobsFeedScreenState extends State<JobsFeedScreen> {
                             'Create Post',
                             style:
                                 Theme.of(context).textTheme.bodyLarge!.copyWith(
-                                      color: Colors.black,
+                                      color: Colors.white,
                                       fontWeight: FontWeight.w900,
                                     ),
                           ),
                           icon: Icon(
                             Icons.add,
-                            color: Colors.black,
+                            color: Colors.white,
                             size: 26,
                           ),
                           onPressed: kIsWeb
