@@ -49,6 +49,7 @@ class Job {
   final DateTime? applicationStartDate;
   final DateTime? applicationEndDate;
   final DateTime? examDate;
+  final DateTime? interviewDate;
   final DateTime? resultDate;
 
   final ApplicationMode applicationMode; // Online / Offline
@@ -103,6 +104,7 @@ class Job {
     this.applicationStartDate,
     this.applicationEndDate,
     this.examDate,
+    this.interviewDate,
     this.resultDate,
     required this.applicationMode,
     this.applicationLink,
@@ -166,6 +168,9 @@ class Job {
       examDate: json[AppConstants.examDate] != null
           ? (json[AppConstants.examDate] as Timestamp).toDate()
           : null,
+      interviewDate: json[AppConstants.interviewDate] != null
+          ? (json[AppConstants.interviewDate] as Timestamp).toDate()
+          : null,
       resultDate: json[AppConstants.resultDate] != null
           ? (json[AppConstants.resultDate] as Timestamp).toDate()
           : null,
@@ -228,6 +233,8 @@ class Job {
           : null,
       AppConstants.examDate:
           examDate != null ? Timestamp.fromDate(examDate!) : null,
+      AppConstants.interviewDate:
+          interviewDate != null ? Timestamp.fromDate(interviewDate!) : null,
       AppConstants.resultDate:
           resultDate != null ? Timestamp.fromDate(resultDate!) : null,
       AppConstants.applicationMode: applicationMode.name,

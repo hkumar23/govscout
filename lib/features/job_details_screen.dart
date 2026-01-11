@@ -232,6 +232,8 @@ class _JobDetailsScreenState extends State<JobDetailsScreen> {
         ),
       if (widget.job.examDate != null)
         _infoRow("Exam Date", _formatDate(widget.job.examDate!)),
+      if (widget.job.interviewDate != null)
+        _infoRow("Interview Date", _formatDate(widget.job.interviewDate!)),
       if (widget.job.resultDate != null)
         _infoRow("Result Date", _formatDate(widget.job.resultDate!)),
     ]);
@@ -333,6 +335,7 @@ class _JobDetailsScreenState extends State<JobDetailsScreen> {
     return widget.job.applicationStartDate != null ||
         widget.job.applicationEndDate != null ||
         widget.job.examDate != null ||
+        widget.job.interviewDate != null ||
         widget.job.resultDate != null;
   }
 

@@ -49,6 +49,7 @@ class _AddUpdateJobScreenState extends State<AddUpdateJobScreen> {
   final maxAgeCtrl = TextEditingController();
   final minExperienceCtrl = TextEditingController();
   final examDateCtrl = TextEditingController();
+  final interviewDateCtrl = TextEditingController();
   final resultDateCtrl = TextEditingController();
   final applicationLinkCtrl = TextEditingController();
   final officialWebsiteLinkCtrl = TextEditingController();
@@ -63,6 +64,7 @@ class _AddUpdateJobScreenState extends State<AddUpdateJobScreen> {
   DateTime? startDate;
   DateTime? endDate;
   DateTime? examDate;
+  DateTime? interviewDate;
   DateTime? resultDate;
 
   bool? isGenderSpecific;
@@ -115,6 +117,7 @@ class _AddUpdateJobScreenState extends State<AddUpdateJobScreen> {
         applicationStartDate: startDate!,
         applicationEndDate: endDate!,
         examDate: examDate,
+        interviewDate: interviewDate,
         resultDate: resultDate,
         applicationFeeGeneral: applicationFeeGeneralCtrl.text.isEmpty
             ? null
@@ -182,6 +185,9 @@ class _AddUpdateJobScreenState extends State<AddUpdateJobScreen> {
       examDateCtrl.text = widget.job!.examDate != null
           ? DateFormat("dd MMM yyyy").format(widget.job!.examDate!)
           : "";
+      interviewDateCtrl.text = widget.job!.interviewDate != null
+          ? DateFormat("dd MMM yyyy").format(widget.job!.interviewDate!)
+          : "";
       resultDateCtrl.text = widget.job!.resultDate != null
           ? DateFormat("dd MMM yyyy").format(widget.job!.resultDate!)
           : "";
@@ -196,6 +202,7 @@ class _AddUpdateJobScreenState extends State<AddUpdateJobScreen> {
       startDate = widget.job!.applicationStartDate;
       endDate = widget.job!.applicationEndDate;
       examDate = widget.job!.examDate;
+      interviewDate = widget.job!.interviewDate;
       resultDate = widget.job!.resultDate;
 
       isGenderSpecific = widget.job!.genderSpecific;
@@ -690,6 +697,39 @@ class _AddUpdateJobScreenState extends State<AddUpdateJobScreen> {
                                 }
                               },
                             ),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: AppTextFormField(
+                              bottomPadding: 16,
+                              controller: interviewDateCtrl,
+                              readOnly: true, // Makes the field non-editable
+                              labelText: "Interview Date",
+                              prefixIcon: Icons.event,
+                              onTap: () async {
+                                final pickedDate = await showDatePicker(
+                                  context: context,
+                                  initialDate: DateTime.now(),
+                                  firstDate: DateTime(2020),
+                                  lastDate: DateTime(2050),
+                                );
+                                if (pickedDate != null) {
+                                  setState(() {
+                                    interviewDate = pickedDate;
+                                    interviewDateCtrl.text =
+                                        DateFormat("dd MMM yyyy")
+                                            .format(pickedDate);
+                                  });
+                                }
+                              },
+                            ),
+                          ),
+                          SizedBox(width: 10),
+                          Expanded(
+                            child: SizedBox(),
                           ),
                         ],
                       ),
