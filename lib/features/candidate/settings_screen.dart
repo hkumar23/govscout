@@ -42,65 +42,102 @@ class SettingsScreen extends StatelessWidget {
                   child: CircularProgressIndicator(),
                 );
               }
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  ListTile(
-                    leading: Icon(Icons.color_lens_rounded),
-                    title: Text(
-                      AppLanguage.selectTheme,
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
+              return SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    ListTile(
+                      leading: Icon(Icons.color_lens_rounded),
+                      title: Text(
+                        AppLanguage.selectTheme,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
                       ),
                     ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(left: 45, bottom: 16.0),
-                    child: Wrap(
-                      children: [
-                        AppThemeMode.system,
-                        AppThemeMode.light,
-                        AppThemeMode.dark
-                      ]
-                          .map((mode) => Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 8.0),
-                                child: ChoiceChip(
-                                  label: Text(
-                                    mode.name[0].toUpperCase() +
-                                        mode.name.substring(1),
+                    Padding(
+                      padding: EdgeInsets.only(left: 45, bottom: 16.0),
+                      child: Wrap(
+                        children: [
+                          AppThemeMode.system,
+                          AppThemeMode.light,
+                          AppThemeMode.dark
+                        ]
+                            .map((mode) => Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 8.0),
+                                  child: ChoiceChip(
+                                    label: Text(
+                                      mode.name[0].toUpperCase() +
+                                          mode.name.substring(1),
+                                    ),
+                                    selected: themeState.themeMode == mode,
+                                    onSelected: (selected) {
+                                      if (selected) {
+                                        context.read<ThemeBloc>().add(
+                                              ChangeTheme(
+                                                mode,
+                                                userId,
+                                              ),
+                                            );
+                                      }
+                                    },
                                   ),
-                                  selected: themeState.themeMode == mode,
-                                  onSelected: (selected) {
-                                    if (selected) {
-                                      context.read<ThemeBloc>().add(
-                                            ChangeTheme(
-                                              mode,
-                                              userId,
-                                            ),
-                                          );
-                                    }
-                                  },
+                                ))
+                            .toList(),
+                      ),
+                    ),
+                    ListTile(
+                      leading: Icon(
+                        Icons.logout,
+                        color: appColors.error,
+                      ),
+                      title: Text(
+                        AppLanguage.logout,
+                        style: TextStyle(color: appColors.error),
+                      ),
+                      onTap: () {
+                        AppMethods.logoutWithDialog(context);
+                      },
+                    ),
+                    Container(
+                      padding: const EdgeInsets.all(16),
+                      margin: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 12),
+                      decoration: BoxDecoration(
+                        color: Colors.blue.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(Icons.auto_awesome,
+                              color: Colors.blue, size: 30),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: const [
+                                Text(
+                                  "New Features Coming Soon",
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
-                              ))
-                          .toList(),
-                    ),
-                  ),
-                  ListTile(
-                    leading: Icon(
-                      Icons.logout,
-                      color: appColors.error,
-                    ),
-                    title: Text(
-                      AppLanguage.logout,
-                      style: TextStyle(color: appColors.error),
-                    ),
-                    onTap: () {
-                      AppMethods.logoutWithDialog(context);
-                    },
-                  ),
-                ],
+                                SizedBox(height: 4),
+                                Text(
+                                  "We're working on exciting updates. Stay tuned!",
+                                  style: TextStyle(fontSize: 13),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
               );
             },
           );

@@ -108,22 +108,35 @@ class _JobsFeedScreenState extends State<JobsFeedScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Icon(Icons.explore_off_outlined,
-                        color: Colors.white38, size: 60),
+                    Icon(
+                      Icons.explore_off_outlined,
+                      color: Theme.of(context).brightness == Brightness.dark
+                          ? Colors.white38
+                          : Colors.black38,
+                      size: 60,
+                    ),
                     const SizedBox(height: 16),
                     Text(
                       "No updates yet. Check back later!",
                       textAlign: TextAlign.center,
-                      style:
-                          Theme.of(context).textTheme.headlineSmall!.copyWith(
-                                color: Colors.white,
-                              ),
+                      style: Theme.of(context)
+                          .textTheme
+                          .headlineSmall!
+                          .copyWith(
+                            color:
+                                Theme.of(context).brightness == Brightness.dark
+                                    ? Colors.white
+                                    : Colors.black,
+                          ),
                     ),
                     const SizedBox(height: 8),
                     Text(
                       "The jobs feed is empty right now.",
                       style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                            color: Colors.white60,
+                            color:
+                                Theme.of(context).brightness == Brightness.dark
+                                    ? Colors.white60
+                                    : Colors.black54,
                           ),
                       textAlign: TextAlign.center,
                     ),
